@@ -31,7 +31,7 @@ public class AddressController {
 	
 	
 	/*
-	 * 个人地址信息 ginger-k提交
+	 * 个人地址信息 
 	 */
 	@RequestMapping(value= "/user/address", method = RequestMethod.GET)
 	@ResponseBody
