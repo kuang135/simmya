@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simmya.mapper.AddressMapper" >
+  <resultMap id="BaseResultMap" type="com.simmya.pojo.Address" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="ADDRESS_INFO" property="addressInfo" jdbcType="VARCHAR" />
+    <result column="ZIPCODE" property="zipcode" jdbcType="VARCHAR" />
+    <result column="GET_NAME" property="getName" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ADDRESS_INFO, ZIPCODE, GET_NAME, PHONE, USER_ID
+  </sql>
+  <!-- <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from address
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.simmya.pojo.Address" >
+    insert into address (ID, ADDRESS_INFO, ZIPCODE, 
+      GET_NAME, PHONE, USER_ID
+      )
+    values (#{id,jdbcType=VARCHAR}, #{addressInfo,jdbcType=VARCHAR}, #{zipcode,jdbcType=VARCHAR}, 
+      #{getName,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.simmya.pojo.Address" >
+    insert into address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="addressInfo != null" >
+        ADDRESS_INFO,
+      </if>
+      <if test="zipcode != null" >
+        ZIPCODE,
+      </if>
+      <if test="getName != null" >
+        GET_NAME,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="addressInfo != null" >
+        #{addressInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="zipcode != null" >
+        #{zipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="getName != null" >
+        #{getName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.simmya.pojo.Address" >
+    update address
+    <set >
+      <if test="addressInfo != null" >
+        ADDRESS_INFO = #{addressInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="zipcode != null" >
+        ZIPCODE = #{zipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="getName != null" >
+        GET_NAME = #{getName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.simmya.pojo.Address" >
+    update address
+    set ADDRESS_INFO = #{addressInfo,jdbcType=VARCHAR},
+      ZIPCODE = #{zipcode,jdbcType=VARCHAR},
+      GET_NAME = #{getName,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update> -->
+</mapper>

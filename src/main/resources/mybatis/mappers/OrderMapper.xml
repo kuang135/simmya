@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simmya.mapper.OrdersMapper" >
+  
+  	<resultMap type="com.simmya.vo.OrderV" id="one2many" autoMapping="true"> 
+	 	<id property="id" column="id"/>
+		<collection property="boxs" javaType="List" ofType="com.simmya.vo.BoxV" autoMapping="true">
+			<id property="id" column="box_id"/>
+		</collection>
+	</resultMap>
+	<select id="getOrderListByUserid" resultMap="one2many">
+		SELECT a.ID id,DATE_FORMAT(a.CREATE_TIME,'%Y%m%d %H:%i:%s') createTime,d.ADDRESS_INFO address,
+		c.ID box_id,c.NAME name, c.TITLE title,c.DETAIL detail,c.IMAGE_ADDRESS imageAddress,c.BOX_PRICE price,
+		b.ORDER_WAY orderWay,b.ORDER_COUNT orderCount,b.SEND_COUNT sendCount
+		FROM orders a
+		LEFT JOIN ORDER_BOX_REF b ON a.ID = b.ORDER_ID
+		LEFT JOIN BOX c ON c.ID = b.BOX_ID
+		LEFT JOIN ADDRESS d ON a.ADDRESS_ID = d.ID
+		WHERE a.USER_ID = #{userid}
+	</select>
+  
+</mapper>
