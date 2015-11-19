@@ -2,6 +2,7 @@ package com.simmya.service.impl;
 
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simmya.mapper.BoxCollectionMapper;
+import com.simmya.mapper.BoxDiscussMapper;
 import com.simmya.pojo.Box;
 import com.simmya.pojo.BoxCollection;
+import com.simmya.pojo.BoxDiscuss;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
 
@@ -20,6 +23,8 @@ public class BoxService extends BaseService<Box>{
 	
 	@Autowired
 	private BoxCollectionMapper boxCollectionMapper;
+	@Autowired
+	private BoxDiscussMapper boxDiscussMapper;
 	
 	public List<Map<String, Object>> listBox(int start, int size) throws SQLException {
 		String sql = "select ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
@@ -82,6 +87,32 @@ public class BoxService extends BaseService<Box>{
 		box.setShareCount(box.getShareCount() + 1); 
 		super.updateSelective(box);
 		map.put("desc", "sucess");
+		return map;
+	}
+
+	public Map<String, Object> doDiscuss(String userid, String boxId, String content) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Box box = super.selectByPrimaryKey(boxId);
+		if (box == null) {
+			map.put("code", "error");
+			return map;
+		}
+		BoxDiscuss boxDiscuss = new BoxDiscuss();
+		boxDiscuss.setUserId(userid);
+		boxDiscuss.setBoxId(boxId);;
+		List<BoxDiscuss> list = boxDiscussMapper.select(boxDiscuss);
+		if (list != null && list.size() > 0) {
+			map.put("code", "error");
+			map.put("desc", "你已评论");
+			return map;
+		}
+		boxDiscuss.setContent(content);
+		boxDiscuss.setCreateTime(new Date());
+		boxDiscussMapper.insert(boxDiscuss);
+		box.setDiscussCount(box.getDiscussCount() + 1); 
+		super.updateSelective(box);
+		map.put("code", "sucess");
+		map.put("desc", "成功");
 		return map;
 	}
 

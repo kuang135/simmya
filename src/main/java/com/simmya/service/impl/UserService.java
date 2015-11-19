@@ -93,5 +93,20 @@ public class UserService extends BaseService<User>{
 		}
 		return map;
 	}
+
+	public Map<String, Object> completeInfo(User loginUser) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			int i = super.updateSelective(loginUser);
+			if (i == 1) {
+				map.put("code", "success");
+			} else {
+				map.put("code", "error");
+			}
+		} catch (Exception e) {
+			map.put("code", "error");
+		}
+		return map;
+	}
 	
 }

@@ -84,4 +84,24 @@ public class BoxController {
 		return boxService.share(loginUser.getId(), boxid);
 	}
 	
+	/*
+	 * /user/box/discussAdd
+	 */
+	
+	@RequestMapping(value= "/user/box/discussAdd", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> doDiscuss(@RequestHeader(value = "token",required = true)String token,
+										 @RequestParam(value = "boxId", required = true)String boxId,
+										 @RequestParam(value = "content", required = true)String content
+										 ) {
+		if (StringUtils.isBlank(token)) {
+			return ReturnMap.BLANK;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			return ReturnMap.FAULT;
+		}
+		return boxService.doDiscuss(loginUser.getId(), boxId, content);
+	}
+	
 }

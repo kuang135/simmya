@@ -1,6 +1,7 @@
 package com.simmya.controller;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -165,5 +166,29 @@ public class UserController {
 		String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
 		loginUser.setPassword(md5DigestAsHex);
 		return userService.updatePassword(loginUser);
+	}
+	
+	/*
+	 * gender=男&birth=19800909&zodiac=虎&profession=计算机应用
+	 */
+	@RequestMapping(value= "/user/personalInfo", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> completeInfo(@RequestHeader(value = "token",required = true)String token,
+			  @RequestParam(value = "gender", required = true)String gender,
+			  @RequestParam(value = "birth", required = true)String birth,
+			  @RequestParam(value = "zodiac", required = true)String zodiac,
+			  @RequestParam(value = "profession", required = true)String profession) throws Exception {
+		if (StringUtils.isBlank(token)) {
+			return Collections.emptyMap();
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			return Collections.emptyMap();
+		}
+		loginUser.setBirth(new SimpleDateFormat("yyyyMMdd").parse(birth));
+		loginUser.setGender(gender);
+		loginUser.setProfession(profession);
+		loginUser.setZodiac(zodiac);
+		return userService.completeInfo(loginUser);
 	}
 }
