@@ -30,7 +30,9 @@ public class AddressController {
 	private AddressService addressService;
 	
 	
-	
+	/*
+	 * 个人地址信息
+	 */
 	@RequestMapping(value= "/user/address", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, Object>> listAddress(@RequestHeader(value = "token",required = true)String token) throws SQLException {
