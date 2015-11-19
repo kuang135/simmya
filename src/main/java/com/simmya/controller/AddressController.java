@@ -46,7 +46,7 @@ public class AddressController {
 	
 	
 	/*
-	 * address=浙江嘉兴3&
+	 * address=浙江省嘉兴市区3&
 	 * zipCode=314202&
 	 * getName=小张&
 	 * phone=12313423423
