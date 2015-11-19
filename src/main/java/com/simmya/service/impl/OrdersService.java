@@ -82,7 +82,7 @@ public class OrdersService extends BaseService<Orders>{
 			return map;
 		}
 		try {
-			od.setStatus(OrderStatus.Back.toString());
+			od.setStatus(OrderStatus.Back);
 			super.updateSelective(od);
 			String sql = "UPDATE order_box_ref SET STATUS = ? WHERE order_id = ?";
 			DbUtil.update(sql, OrderStatus.Back, orderId);
@@ -110,14 +110,14 @@ public class OrdersService extends BaseService<Orders>{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "error");
 		Orders order = super.selectByPrimaryKey(orderId);
-		if (order != null && order.getStatus().equals(OrderStatus.Payed.toString())) {
+		if (order != null && order.getStatus().equals(OrderStatus.Payed)) {
 			OrderBoxRef orderBoxRef = new OrderBoxRef();
 			orderBoxRef.setOrderId(orderId);
 			orderBoxRef.setBoxId(boxId);
 			List<OrderBoxRef> list = orderBoxRefMapper.select(orderBoxRef);
 			if (list != null && list.size() > 0) {
 				OrderBoxRef bean = list.get(0);
-				bean.setStatus(BoxStatus.Back.toString());
+				bean.setStatus(BoxStatus.Back);
 				orderBoxRefMapper.updateByPrimaryKeySelective(bean);
 				BackBox backBox = new BackBox();
 				backBox.setBoxId(boxId);
