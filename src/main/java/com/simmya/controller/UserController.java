@@ -1,11 +1,14 @@
 package com.simmya.controller;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.simmya.constant.ReturnMap;
 import com.simmya.pojo.User;
@@ -190,5 +194,18 @@ public class UserController {
 		loginUser.setProfession(profession);
 		loginUser.setZodiac(zodiac);
 		return userService.completeInfo(loginUser);
+	}
+	
+	@RequestMapping(value= "/user/headUpload", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> headUpload(@RequestParam("in") MultipartFile multipartFile) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		String fileName = multipartFile.getName();
+		String suffix = StringUtils.substringAfter(fileName, ".");
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		File file = new File("pic" + uuid + suffix);
+		multipartFile.transferTo(file);
+		map.put("code", "sucess");
+		return map;
 	}
 }
