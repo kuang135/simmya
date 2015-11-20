@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import com.simmya.constant.ReturnMap;
 import com.simmya.pojo.User;
 import com.simmya.service.impl.CodecService;
 import com.simmya.service.impl.UserService;
+import com.simmya.util.FilePathUtil;
 import com.simmya.util.HttpSender;
 import com.simmya.util.MathUtil;
 
@@ -181,6 +183,7 @@ public class UserController {
 			  @RequestParam(value = "gender", required = true)String gender,
 			  @RequestParam(value = "birth", required = true)String birth,
 			  @RequestParam(value = "zodiac", required = true)String zodiac,
+			  @RequestParam(value = "nickName", required = true)String nickName,
 			  @RequestParam(value = "profession", required = true)String profession) throws Exception {
 		if (StringUtils.isBlank(token)) {
 			return Collections.emptyMap();
@@ -193,13 +196,15 @@ public class UserController {
 		loginUser.setGender(gender);
 		loginUser.setProfession(profession);
 		loginUser.setZodiac(zodiac);
+		loginUser.setNickname(nickName);
 		return userService.completeInfo(loginUser);
 	}
 	
 	@RequestMapping(value= "/user/headUpload", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> headUpload(@RequestHeader(value = "token",required = true)String token,
-			@RequestParam("in") MultipartFile multipartFile) throws Exception {
+			@RequestParam("in") MultipartFile multipartFile,
+			HttpServletRequest request) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtils.isBlank(token)) {
 			map.put("code", "error");
@@ -210,13 +215,24 @@ public class UserController {
 			map.put("code", "error");
 			return map;
 		}
-		String fileName = multipartFile.getName();
-		String suffix = StringUtils.substringAfter(fileName, ".");
+		String originalFilename = multipartFile.getOriginalFilename();
+		String suffix = StringUtils.substringAfter(originalFilename, ".");
+		if (!suffix.equalsIgnoreCase("PNG") && !suffix.equalsIgnoreCase("JPG") 
+				&& !suffix.equalsIgnoreCase("BMP") && !suffix.equalsIgnoreCase("GIF")) {
+			map.put("code", "error");
+			return map;
+		}
 		String uuid = UUID.randomUUID().toString().replace("-", "");
-		String name = "pic" + uuid + suffix;
+		String realPath = request.getSession().getServletContext().getRealPath("/pic");
+		String dirPath = realPath + FilePathUtil.createPath();
+		File dir = new File(dirPath);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		String name = dirPath + File.separator + uuid + "." + suffix;
 		File file = new File(name);
 		multipartFile.transferTo(file);
-		loginUser.setHeadPic(name);
+		loginUser.setHeadPic("pic" + FilePathUtil.createPath() + File.separator + uuid + "." + suffix);
 		userService.updateSelective(loginUser);
 		map.put("code", "sucess");
 		return map;
