@@ -198,13 +198,26 @@ public class UserController {
 	
 	@RequestMapping(value= "/user/headUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> headUpload(@RequestParam("in") MultipartFile multipartFile) throws Exception {
+	public Map<String, Object> headUpload(@RequestHeader(value = "token",required = true)String token,
+			@RequestParam("in") MultipartFile multipartFile) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
 		String fileName = multipartFile.getName();
 		String suffix = StringUtils.substringAfter(fileName, ".");
 		String uuid = UUID.randomUUID().toString().replace("-", "");
-		File file = new File("pic" + uuid + suffix);
+		String name = "pic" + uuid + suffix;
+		File file = new File(name);
 		multipartFile.transferTo(file);
+		loginUser.setHeadPic(name);
+		userService.updateSelective(loginUser);
 		map.put("code", "sucess");
 		return map;
 	}
