@@ -147,7 +147,8 @@ public class UserController {
 	 */
 	@RequestMapping(value= "/user/personalInfo", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getInfo(@RequestHeader(value = "token",required = true)String token) throws SQLException {
+	public Map<String, Object> getInfo(@RequestHeader(value = "token",required = true)String token,
+			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return Collections.emptyMap();
 		}
@@ -155,7 +156,15 @@ public class UserController {
 		if (loginUser == null) {
 			return Collections.emptyMap();
 		}
-		return userService.getInfo(loginUser.getId());
+		Map<String, Object> map = userService.getInfo(loginUser.getId());
+		String headPic = (String) map.get("headPic");
+		if (headPic != null) {
+			StringBuffer requestURL = request.getRequestURL();
+			String servletPath = request.getServletPath();
+			String url = StringUtils.substringBefore(requestURL.toString(), servletPath);
+			map.put("headPic", url + "/" + headPic);
+		}
+		return map;
 	}
 
 	@RequestMapping(value= "/user/password", method = RequestMethod.POST)
