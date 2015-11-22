@@ -1,0 +1,6 @@
+var SIMMYA = (function(){
+	return {
+		
+		
+	};
+})();

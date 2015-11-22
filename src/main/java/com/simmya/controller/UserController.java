@@ -232,7 +232,7 @@ public class UserController {
 			return map;
 		}
 		String uuid = UUID.randomUUID().toString().replace("-", "");
-		String realPath = request.getSession().getServletContext().getRealPath("/pic");
+		String realPath = request.getSession().getServletContext().getRealPath("/pic/head");
 		String dirPath = realPath + FilePathUtil.createPath();
 		File dir = new File(dirPath);
 		if (!dir.exists()) {
@@ -241,7 +241,7 @@ public class UserController {
 		String name = dirPath + File.separator + uuid + "." + suffix;
 		File file = new File(name);
 		multipartFile.transferTo(file);
-		loginUser.setHeadPic("pic" + FilePathUtil.createPath() + File.separator + uuid + "." + suffix);
+		loginUser.setHeadPic("pic" + File.separator + "head" + FilePathUtil.createPath() + File.separator + uuid + "." + suffix);
 		userService.updateSelective(loginUser);
 		map.put("code", "sucess");
 		return map;

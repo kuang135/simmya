@@ -16,7 +16,7 @@
 		LEFT JOIN ORDER_BOX_REF b ON a.ID = b.ORDER_ID
 		LEFT JOIN BOX c ON c.ID = b.BOX_ID
 		LEFT JOIN ADDRESS d ON a.ADDRESS_ID = d.ID
-		WHERE a.USER_ID = #{userid}
+		WHERE a.STATUS = '已付款' AND a.USER_ID = #{userid}
 	</select>
   
 </mapper>

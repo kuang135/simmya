@@ -10,6 +10,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageInfo;
+import com.simmya.easyui.DataGrid;
 import com.simmya.mapper.BoxCollectionMapper;
 import com.simmya.mapper.BoxDiscussMapper;
 import com.simmya.pojo.Box;
@@ -114,6 +116,17 @@ public class BoxService extends BaseService<Box>{
 		map.put("code", "sucess");
 		map.put("desc", "成功");
 		return map;
+	}
+
+	public DataGrid getDataGrid(int page, int rows) {
+		List<Box> boxes = super.selectPage(page, rows);
+		PageInfo<Box> pageInfo=new PageInfo<Box>(boxes);
+		DataGrid datagrid=new DataGrid();
+        if(boxes!=null){
+        	datagrid.setTotal((int)pageInfo.getTotal());
+        	datagrid.setRows(boxes);
+        }
+        return datagrid;
 	}
 
 	

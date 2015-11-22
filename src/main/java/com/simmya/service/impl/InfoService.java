@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageInfo;
+import com.simmya.easyui.DataGrid;
 import com.simmya.mapper.DiscussMapper;
 import com.simmya.mapper.InfoAgreeMapper;
 import com.simmya.mapper.InfoCollectionMapper;
@@ -177,6 +179,17 @@ public class InfoService extends BaseService<Info>{
 		super.updateSelective(info);
 		map.put("code", "sucess");
 		return map;
+	}
+
+	public DataGrid getDataGrid(int page, int rows) {
+		List<Info> list = super.selectPage(page, rows);
+		PageInfo<Info> pageInfo=new PageInfo<Info>(list);
+		DataGrid datagrid=new DataGrid();
+        if(list != null) {
+        	datagrid.setTotal((int)pageInfo.getTotal());
+        	datagrid.setRows(list);
+        }
+        return datagrid;
 	}
 	
 }
