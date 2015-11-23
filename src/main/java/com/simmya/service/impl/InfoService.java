@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simmya.easyui.DataGrid;
 import com.simmya.mapper.DiscussMapper;
 import com.simmya.mapper.InfoAgreeMapper;
 import com.simmya.mapper.InfoCollectionMapper;
+import com.simmya.mapper.InfoMapper;
 import com.simmya.mapper.UserShareRefMapper;
 import com.simmya.pojo.Discuss;
 import com.simmya.pojo.Info;
@@ -35,6 +37,8 @@ public class InfoService extends BaseService<Info>{
 	private InfoCollectionMapper infoCollectionMapper;
 	@Autowired
 	private UserShareRefMapper shareMapper;
+	@Autowired
+	private InfoMapper infoMapper;
 	
 	public List<Map<String, Object>> getTop10(String limit) throws SQLException {
 		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,COLLECT_COUNT collectCount,"
@@ -181,8 +185,9 @@ public class InfoService extends BaseService<Info>{
 		return map;
 	}
 
-	public DataGrid getDataGrid(int page, int rows) {
-		List<Info> list = super.selectPage(page, rows);
+	public DataGrid getDataGrid(int page, int rows, Info info) {
+		PageHelper.startPage(page, rows);
+		List<Info> list = infoMapper.selectByName(info.getName());
 		PageInfo<Info> pageInfo=new PageInfo<Info>(list);
 		DataGrid datagrid=new DataGrid();
         if(list != null) {
@@ -190,6 +195,16 @@ public class InfoService extends BaseService<Info>{
         	datagrid.setRows(list);
         }
         return datagrid;
+	}
+	
+	@Transactional
+	public int deleteByIds(String[] ids) {
+		int count = 0;
+		for(int i = 0; i < ids.length; i++) {
+			super.deleteById(ids[i]);
+			count ++;
+		}
+		return count;
 	}
 	
 }

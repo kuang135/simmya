@@ -1,12 +1,8 @@
 package com.simmya.pojo;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OrdersCommit {

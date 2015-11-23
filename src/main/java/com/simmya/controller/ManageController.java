@@ -49,8 +49,13 @@ public class ManageController {
 	@RequestMapping(value= "/info", method = RequestMethod.POST)
 	@ResponseBody
 	public DataGrid info(@RequestParam(value="page")int page,
-			@RequestParam(value="rows")int rows) {
-		return infoService.getDataGrid(page, rows);
+			@RequestParam(value="rows")int rows,
+			@RequestParam(value="name",required = false)String name) {
+		Info info = new Info();
+		if (StringUtils.isNotBlank(name)) {
+			info.setName(name);
+		}
+		return infoService.getDataGrid(page, rows, info);
 	}
 	
 	@RequestMapping(value= "/info/add.do", method = RequestMethod.POST)
@@ -85,8 +90,15 @@ public class ManageController {
 	@RequestMapping(value= "/info/delete.do", method = RequestMethod.POST)
 	@ResponseBody
 	public AjaxResult infoDelete(@RequestParam("ids") String ids) {
-		System.out.println(ids);
-		AjaxResult ajaxResult = new AjaxResult(200, "删除资讯成功");
+		int count;
+		AjaxResult ajaxResult;
+		try {
+			String[] idsArr = ids.split(",");
+			count = infoService.deleteByIds(idsArr);
+			ajaxResult = new AjaxResult(200, "成功删除" + count + "条资讯。");
+		} catch (Exception e) {
+			ajaxResult = new AjaxResult(400, "删除失败。");
+		}
 		return ajaxResult;
 	}
 }

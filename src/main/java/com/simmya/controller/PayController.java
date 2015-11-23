@@ -73,7 +73,6 @@ public class PayController {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("code", "error");
-		ObjectMapper mapper = new ObjectMapper();
 		Orders order=ordersService.selectByPrimaryKey(out_trade_no);
 		order.setStatus(OrderStatus.Payed);
 		ordersService.update(order);

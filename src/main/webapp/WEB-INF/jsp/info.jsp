@@ -31,13 +31,13 @@
 		<table width="100%">
 			<tr>
 				<td align="left">
-					搜索内容：<input id="fromDateId" name="fromDate" type="text" class="easyui-datebox" data-options="width:110"/>
-            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()">搜索</a>
+					资讯标题：<input id="searchName" class="easyui-searchbox" data-options="width:110,searcher:doSearch"/>
+            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="doRefresh()"></a>
 				</td>
 				<td align="right">
 					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"  onclick="openAdd()">添加</a>
             		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="doDelete()">删除</a>
-					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'"  onclick="doEdit()">编辑</a>
+					<!-- <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'"  onclick="doEdit()">编辑</a> -->
 				</td>
 			</tr>
 		</table>
@@ -45,11 +45,11 @@
 	
 	 <div id="dlg" class="easyui-dialog" style="width:500px;height:500px;" data-options="closed:true,buttons:'#dlg-buttons'">
     	<form id="ff" method="post" enctype="multipart/form-data" action="/manage/info/add.do"> 
-    		<br/>&nbsp;标题:<input id="name" class="easyui-textbox" name="name"/><br/><br/>
-    		&nbsp;摘要:<input id="title" class="easyui-textbox" name="title"/><br/><br/>
-    		&nbsp;上传图片:<input id="imageAddress" name="file" class="easyui-filebox" data-options="width:300"/><br/><br/>
-    		&nbsp;资讯出处:<input name="source" class="easyui-textbox" style="width:200px"/><br/><br/>
-    		&nbsp;详细内容:<input id="detail" class="easyui-textbox" name="detail" data-options="width:300,height:200"/>
+    		<br/>&nbsp;标题:<input id="name" class="easyui-textbox" name="name"/>&nbsp;<span id="nameIsNull"></span><br/><br/>
+    		&nbsp;摘要:<input id="title" class="easyui-textbox" name="title"/>&nbsp;<span id="titleIsNull"></span><br/><br/>
+    		&nbsp;上传图片:<input id="imageAddress" name="file" class="easyui-filebox" data-options="width:300,buttonText:'请选择文件'"/>&nbsp;<span id="imageIsNull"></span><br/><br/>
+    		&nbsp;资讯出处:<input id="source" class="easyui-textbox" style="width:200px"/>&nbsp;<span id="sourceIsNull"></span><br/><br/>
+    		&nbsp;详细内容:<input id="detail" class="easyui-textbox" name="detail" data-options="width:300,height:200"/>&nbsp;<span id="detailIsNull"></span>
 		</form>  
     </div>
     
