@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.simmya.mapper.BoxMapper" >
+  
+	<select id="selectByName" resultType="com.simmya.pojo.Box">
+		SELECT ID id,NAME name,TITLE title,DETAIL detail,
+		COLLECT_COUNT collectCount,SHARE_COUNT shareCount,
+		IMAGE_ADDRESS imageAddress,BOX_PRICE boxPrice,
+		DISCUSS_COUNT discussCount 
+		FROM box 
+		<where>
+	        <if test="name != null ">
+	            NAME LIKE '%${name}%'
+	        </if>
+	     </where>
+	</select>
+  
+</mapper>

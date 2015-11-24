@@ -6,6 +6,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.4.1/themes/default/easyui.css">
 		<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.4.1/themes/icon.css">
+		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="/script/box.js"></script>
 	</head>
 	<body>
 		<table id="dg" class="easyui-datagrid" 
@@ -18,7 +22,7 @@
 	            <th data-options="field:'title',width:200,align:'center'">摘要</th>
 	            <th data-options="field:'detail',width:250,align:'center'">介绍</th>
 	            <th data-options="field:'imageAddress',width:250,align:'center'">图片地址</th>
-	            <th data-options="field:'boxPrice',width:250,align:'center'">价格</th>
+	            <th data-options="field:'boxPrice',width:250,align:'center'">价格(元/期)</th>
 	            <th data-options="field:'collectCount',width:250,align:'center'">收藏数</th>
 	            <th data-options="field:'shareCount',width:250,align:'center'">分享数</th>
 	            <th data-options="field:'discussCount',width:250,align:'center'">评论数</th>
@@ -29,25 +33,26 @@
 		<table width="100%">
 			<tr>
 				<td align="left">
-					搜索内容：<input id="fromDateId" name="fromDate" type="text" class="easyui-datebox" data-options="width:110"/>
-            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()">搜索</a>
+					<input id="searchName" class="easyui-searchbox" data-options="prompt:'盒子名称',width:200,searcher:doSearch"/>
+            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="doRefresh()"></a>
 				</td>
 				<td align="right">
 					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"  onclick="openAdd()">添加</a>
             		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="doDelete()">删除</a>
 					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'"  onclick="doEdit()">编辑</a>
+					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"  onclick="doEdit()">咨询修改</a>
 				</td>
 			</tr>
 		</table>
     </div>
 	
-	 <div id="dlg" class="easyui-dialog" style="width:300px;height:300px;" data-options="closed:true,buttons:'#dlg-buttons'">
-    	<form id="ff" method="post"> 
-    		<br/>&nbsp;学年:<input id="schoolyearcodeId" class="easyui-combobox" name="schoolyearcode"/><br/><br/>
-    		&nbsp;学期:<input id="semestercodeId" class="easyui-combobox" name="semestercode"/><br/><br/>
-    		&nbsp;考试类型:<input id="examtypecodeId" class="easyui-combobox" name="examtypecode"/><br/><br/>
-    		&nbsp;考试日期:<input id="examdateId" name="examdate" type="text" class="easyui-datebox" data-options="width:110"/><br/><br/>
-    		&nbsp;考试名称:<input name="name" type="text" style="width:120px"/>&nbsp;<span id="nameIsNull"></span>
+    <div id="dlg" class="easyui-dialog" style="width:500px;height:500px;" data-options="closed:true,buttons:'#dlg-buttons'">
+    	<form id="ff" method="post" enctype="multipart/form-data" action="/manage/box/add.do"> 
+    		<br/>&nbsp;名称:<input id="name" class="easyui-textbox" name="name"/>&nbsp;<span id="nameIsNull"></span><br/><br/>
+    		&nbsp;摘要:<input id="title" class="easyui-textbox" name="title"/>&nbsp;<span id="titleIsNull"></span><br/><br/>
+    		&nbsp;上传图片:<input id="imageAddress" name="file" class="easyui-filebox" data-options="width:300,buttonText:'请选择文件'"/>&nbsp;<span id="imageIsNull"></span><br/><br/>
+    		&nbsp;价格:<input id="price" class="easyui-textbox" name="boxPrice" style="width:100px"/>&nbsp;元/期&nbsp;<span id="priceIsNull"></span><br/><br/>
+    		&nbsp;介绍:<input id="detail" class="easyui-textbox" name="detail" data-options="width:300,height:200"/>&nbsp;<span id="detailIsNull"></span>
 		</form>  
     </div>
     
@@ -56,9 +61,5 @@
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="doClose()">取消</a>
 	</div>
 	
-		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="/script/box.js"></script>
 	</body>
 </html>

@@ -6,6 +6,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.4.1/themes/default/easyui.css">
 		<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.4.1/themes/icon.css">
+		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="/script/info.js"></script>
 	</head>
 	<body>
 		<table id="dg" class="easyui-datagrid" 
@@ -31,7 +35,7 @@
 		<table width="100%">
 			<tr>
 				<td align="left">
-					资讯标题：<input id="searchName" class="easyui-searchbox" data-options="width:110,searcher:doSearch"/>
+					<input id="searchName" class="easyui-searchbox" data-options="prompt:'咨询名称',width:200,searcher:doSearch"/>
             		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="doRefresh()"></a>
 				</td>
 				<td align="right">
@@ -57,10 +61,5 @@
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="doSave()">保存</a>
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="doClose()">取消</a>
 	</div>
-	
-		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.min.js"></script>
-		<script type="text/javascript" src="/jquery-easyui-1.4.1/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="/script/info.js"></script>
 	</body>
 </html>

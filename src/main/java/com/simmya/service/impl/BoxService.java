@@ -1,6 +1,7 @@
 package com.simmya.service.impl;
 
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,14 +10,21 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simmya.easyui.DataGrid;
 import com.simmya.mapper.BoxCollectionMapper;
 import com.simmya.mapper.BoxDiscussMapper;
+import com.simmya.mapper.BoxInfoRefMapper;
+import com.simmya.mapper.BoxMapper;
+import com.simmya.mapper.OrderBoxRefMapper;
 import com.simmya.pojo.Box;
 import com.simmya.pojo.BoxCollection;
 import com.simmya.pojo.BoxDiscuss;
+import com.simmya.pojo.BoxInfoRef;
+import com.simmya.pojo.OrderBoxRef;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
 
@@ -27,6 +35,12 @@ public class BoxService extends BaseService<Box>{
 	private BoxCollectionMapper boxCollectionMapper;
 	@Autowired
 	private BoxDiscussMapper boxDiscussMapper;
+	@Autowired
+	private BoxMapper boxMapper;
+	@Autowired
+	private OrderBoxRefMapper orderBoxMapper;
+	@Autowired
+	private BoxInfoRefMapper boxInfoMapper;
 	
 	public List<Map<String, Object>> listBox(int start, int size) throws SQLException {
 		String sql = "select ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
@@ -118,8 +132,9 @@ public class BoxService extends BaseService<Box>{
 		return map;
 	}
 
-	public DataGrid getDataGrid(int page, int rows) {
-		List<Box> boxes = super.selectPage(page, rows);
+	public DataGrid getDataGrid(int page, int rows, Box box) {
+		PageHelper.startPage(page, rows);
+		List<Box> boxes = boxMapper.selectByName(box.getName());
 		PageInfo<Box> pageInfo=new PageInfo<Box>(boxes);
 		DataGrid datagrid=new DataGrid();
         if(boxes!=null){
@@ -127,6 +142,37 @@ public class BoxService extends BaseService<Box>{
         	datagrid.setRows(boxes);
         }
         return datagrid;
+	}
+
+	@Transactional
+	public int deleteByIds(String[] ids, String realPath) throws SQLException {
+		int count = 0;
+		String[] pic = new String[ids.length];
+		for(int i = 0; i < ids.length; i++) {
+			//order_box_ref表有在使用数据，不让删除
+			OrderBoxRef orderBox = new OrderBoxRef();
+			orderBox.setBoxId(ids[i]);
+			List<OrderBoxRef> orderBoxs = orderBoxMapper.select(orderBox);
+			if (orderBoxs != null && orderBoxs.size() > 0) {
+				throw new SQLException();
+			}
+		}
+		for(int i = 0; i < ids.length; i++) {
+			Box box = super.selectByPrimaryKey(ids[i]);
+			pic[i] = box.getImageAddress();
+			super.deleteById(ids[i]);
+			BoxInfoRef boxInfo = new BoxInfoRef();
+			boxInfo.setBoxId(ids[i]);
+			boxInfoMapper.delete(boxInfo);
+		}
+		for(int i = 0; i < pic.length; i++) {
+			File file = new File(realPath, pic[i]);
+			if (file.exists()) {
+				file.delete();
+			}
+			count ++;
+		}
+		return count;
 	}
 
 	

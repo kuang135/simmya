@@ -1,5 +1,6 @@
 package com.simmya.service.impl;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,11 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simmya.easyui.DataGrid;
+import com.simmya.mapper.BoxInfoRefMapper;
 import com.simmya.mapper.DiscussMapper;
 import com.simmya.mapper.InfoAgreeMapper;
 import com.simmya.mapper.InfoCollectionMapper;
 import com.simmya.mapper.InfoMapper;
 import com.simmya.mapper.UserShareRefMapper;
+import com.simmya.pojo.BoxInfoRef;
 import com.simmya.pojo.Discuss;
 import com.simmya.pojo.Info;
 import com.simmya.pojo.InfoAgree;
@@ -39,6 +42,8 @@ public class InfoService extends BaseService<Info>{
 	private UserShareRefMapper shareMapper;
 	@Autowired
 	private InfoMapper infoMapper;
+	@Autowired
+	private BoxInfoRefMapper boxInfoMapper;
 	
 	public List<Map<String, Object>> getTop10(String limit) throws SQLException {
 		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,COLLECT_COUNT collectCount,"
@@ -198,10 +203,26 @@ public class InfoService extends BaseService<Info>{
 	}
 	
 	@Transactional
-	public int deleteByIds(String[] ids) {
+	public int deleteByIds(String[] ids, String realPath) throws SQLException {
 		int count = 0;
+		String[] pic = new String[ids.length];
 		for(int i = 0; i < ids.length; i++) {
+			//box_info_ref表有在使用数据，不让删除
+			BoxInfoRef boxInfo = new BoxInfoRef();
+			boxInfo.setInfoId(ids[i]);
+			List<BoxInfoRef> boxInfos = boxInfoMapper.select(boxInfo);
+			if (boxInfos != null && boxInfos.size() > 0) {
+				throw new SQLException();
+			}
+			Info info = super.selectByPrimaryKey(ids[i]);
+			pic[i] = info.getImageAddress();
 			super.deleteById(ids[i]);
+		}
+		for(int i = 0; i < pic.length; i++) {
+			File file = new File(realPath, pic[i]);
+			if (file.exists()) {
+				file.delete();
+			}
 			count ++;
 		}
 		return count;
