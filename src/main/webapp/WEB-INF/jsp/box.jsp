@@ -13,7 +13,7 @@
 	</head>
 	<body>
 		<table id="dg" class="easyui-datagrid" 
-			data-options="url:'/manage/box.do',fit:true,fitColumns:true,rownumbers:true,toolbar:'#toolbar',pagination:true,pageSize:20">
+			data-options="url:'/manage/box/list.do',fit:true,fitColumns:true,rownumbers:true,toolbar:'#toolbar',pagination:true,pageSize:20">
 	    <thead>
 	        <tr>
 	            <th data-options="field:'ck',checkbox:true"></th>
@@ -39,8 +39,8 @@
 				<td align="right">
 					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"  onclick="openAdd()">添加</a>
             		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="doDelete()">删除</a>
-					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'"  onclick="doEdit()">编辑</a>
-					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"  onclick="doEdit()">咨询修改</a>
+					<!-- <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'"  onclick="doEdit()">编辑</a> -->
+					<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"  onclick="openInfo()">咨询修改</a>
 				</td>
 			</tr>
 		</table>
@@ -55,11 +55,20 @@
     		&nbsp;介绍:<input id="detail" class="easyui-textbox" name="detail" data-options="width:300,height:200"/>&nbsp;<span id="detailIsNull"></span>
 		</form>  
     </div>
-    
     <div id="dlg-buttons">
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="doSave()">保存</a>
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="doClose()">取消</a>
 	</div>
+    
+    <div id="infoDlg" class="easyui-dialog" style="width:600px;height:800px;" data-options="closed:true,buttons:'#info-dlg-buttons'">
+   		<input type="hidden" id="boxId" name="id" value=""/> 
+   		<table id="info-dg" class="easyui-datagrid"></table>
+    </div>
+    <div id="info-dlg-buttons">
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="saveInfo()">保存</a>
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeInfo()">取消</a>
+	</div>
+    
 	
 	</body>
 </html>

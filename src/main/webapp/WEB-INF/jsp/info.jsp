@@ -13,7 +13,7 @@
 	</head>
 	<body>
 		<table id="dg" class="easyui-datagrid" 
-			data-options="url:'/manage/info.do',fit:true,fitColumns:true,rownumbers:true,toolbar:'#toolbar',pagination:true,pageSize:20">
+			data-options="url:'/manage/info/list.do',fit:true,fitColumns:true,rownumbers:true,toolbar:'#toolbar',pagination:true,pageSize:20">
 	    <thead>
 	        <tr>
 	            <th data-options="field:'ck',checkbox:true"></th>

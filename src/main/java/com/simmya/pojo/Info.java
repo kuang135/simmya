@@ -2,6 +2,7 @@ package com.simmya.pojo;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 public class Info {
 	@Id
@@ -27,8 +28,20 @@ public class Info {
     private Integer clickCount;
 
     private Integer discussCount;
+    
+    @Transient
+    private boolean selected;
 
-    public String getId() {
+    
+    public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public String getId() {
         return id;
     }
 

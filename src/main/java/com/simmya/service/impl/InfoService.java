@@ -202,6 +202,16 @@ public class InfoService extends BaseService<Info>{
         return datagrid;
 	}
 	
+	public DataGrid getAllBoxDataGrid() {
+		List<Info> list = super.selectAll();
+		DataGrid datagrid=new DataGrid();
+        if(list != null) {
+        	datagrid.setTotal(list.size());
+        	datagrid.setRows(list);
+        }
+        return datagrid;
+	}
+	
 	@Transactional
 	public int deleteByIds(String[] ids, String realPath) throws SQLException {
 		int count = 0;

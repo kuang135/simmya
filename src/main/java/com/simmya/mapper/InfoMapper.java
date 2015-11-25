@@ -13,5 +13,5 @@ import tk.mybatis.mapper.common.Mapper;
 public interface InfoMapper extends Mapper<Info>{
 
 	List<Info> selectByName(@Param("name")String name);
-	
+
 }

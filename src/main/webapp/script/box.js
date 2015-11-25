@@ -78,6 +78,72 @@ function doDelete(){
 		}
 	);
 }
+
+
+//修改资讯：添加，删除
+function openInfo() {
+	var rowObjArr=$("#dg").datagrid('getSelections');
+	if(rowObjArr.length !=1 ){
+		alert("请选择一个要修改的盒子!");				
+		return;
+	}
+	var row = rowObjArr[0];
+	$("#infoDlg").dialog('setTitle',row.name + ' - ' + row.boxPrice + '元/期');
+	$("#infoDlg").dialog('open');
+	$('#boxId').val(row.id);
+	$('#info-dg').datagrid('clearSelections');
+	$('#info-dg').datagrid({
+	    url:'/manage/box/info.do?boxid='+row.id,
+	    fit:true,fitColumns:true,rownumbers:true,pagination:false,pageSize:20,
+	    idField:'id',
+	    treeField:'name',
+	    columns:[[
+	        {title:'标题',field:'name',width:150,align:'center'},
+	        {title:'摘要',field:'title',width:350,align:'center'}
+	    ]],
+	    onLoadSuccess : function(data){
+	    	var rs = data.rows,
+	    		len = data.rows.length;
+	    	for (var i = 0; i < len; i++) {
+	    		if (rs[i].selected) {
+	    			console.log(rs[i].id);
+	    			$('#info-dg').datagrid('selectRecord', rs[i].id);
+	    		}
+	    	} 
+	    }
+	});
+}
+//保存资讯更改
+function saveInfo(){
+	var boxid = $('#boxId').val();
+	var rowObjArr=$("#info-dg").datagrid('getSelections');
+	var idsArr=[];
+	for(var i=0;i<rowObjArr.length;i++){
+		idsArr.push(rowObjArr[i].id);
+	}
+	var infoids=idsArr.join(",");
+	$.post(
+			"/manage/box/editInfo.do",
+			{boxid: boxid, infoids: infoids},
+			function(backData){
+				if(backData.status==200){
+					$.messager.alert('提示',backData.message,'info',
+						function(){
+							$("#infoDlg").dialog("close");
+							$("#searchName").searchbox('setValue','')
+							$("#dg").datagrid('load',{name: ''});//加载全部数据
+						}
+					);
+				}else {
+					$.messager.alert('提示',backData.message,'warning',function(){});
+				}
+			}
+		);
+}
+//资讯对话框取消
+function closeInfo(){
+	$("#infoDlg").dialog("close");
+}
 //验证
 function checkBeforeSubmit(){
 	var _name = $('#name').val();
