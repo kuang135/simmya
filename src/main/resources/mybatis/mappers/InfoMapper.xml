@@ -6,6 +6,7 @@
 		SELECT ID id,NAME name,TITLE title,DETAIL detail,
 		COLLECT_COUNT collectCount,SHARE_COUNT shareCount,
 		AGREE_COUNT agreeCount,IMAGE_ADDRESS imageAddress,
+		DISCUSS_COUNT discussCount,CLICK_COUNT clickCount,
 		SOURCE source 
 		FROM info 
 		<where>

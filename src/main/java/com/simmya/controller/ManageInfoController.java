@@ -89,5 +89,47 @@ public class ManageInfoController {
 		}
 		return ajaxResult;
 	}
+	
+	@RequestMapping(value= "/edit.do", method = RequestMethod.POST)
+	public String infoEdit(HttpServletRequest request,
+			@RequestParam("edit_file") MultipartFile multipartFile) {
+		try {
+			Info info = new Info();
+			info.setId(request.getParameter("id"));
+			info.setName(request.getParameter("name"));
+			info.setTitle(request.getParameter("title"));
+			info.setSource(request.getParameter("source"));
+			info.setDetail(request.getParameter("detail"));
+			if (multipartFile.isEmpty()) {
+				info.setImageAddress(request.getParameter("imageAddress"));
+			} else {
+				String originalFilename = multipartFile.getOriginalFilename();
+				String suffix = StringUtils.substringAfter(originalFilename, ".");
+				String uuid = UUID.randomUUID().toString().replace("-", "");
+				String realPath = request.getSession().getServletContext().getRealPath("/pic/info");
+				String dirPath = realPath + FilePathUtil.createPath();
+				File dir = new File(dirPath);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				String name = dirPath + File.separator + uuid + "." + suffix;
+				File file = new File(name);
+				multipartFile.transferTo(file);
+				info.setImageAddress("pic" + File.separator + "info" + FilePathUtil.createPath() + File.separator + uuid + "." + suffix);
+			}
+			//更新操作
+			infoService.updateSelective(info);
+			//删除原来的图片文件
+			if (!multipartFile.isEmpty()) {
+				File oldFile = new File(request.getSession().getServletContext().getRealPath("/"), request.getParameter("imageAddress"));
+				if (oldFile.exists()) {
+					oldFile.delete();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "info";
+	}
 
 }

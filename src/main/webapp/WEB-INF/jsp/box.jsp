@@ -23,9 +23,9 @@
 	            <th data-options="field:'detail',width:250,align:'center'">介绍</th>
 	            <th data-options="field:'imageAddress',width:250,align:'center'">图片地址</th>
 	            <th data-options="field:'boxPrice',width:250,align:'center'">价格(元/期)</th>
-	            <th data-options="field:'collectCount',width:250,align:'center'">收藏数</th>
-	            <th data-options="field:'shareCount',width:250,align:'center'">分享数</th>
-	            <th data-options="field:'discussCount',width:250,align:'center'">评论数</th>
+	            <th data-options="field:'collectCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">收藏数</th>
+	            <th data-options="field:'shareCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">分享数</th>
+	            <th data-options="field:'discussCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">评论数</th>
 	        </tr>
 	    </thead>
 	</table>

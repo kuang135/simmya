@@ -18,20 +18,37 @@ function openAdd(){
 	$("#dlg").dialog('open');
 	addDialogInit();
 }
+//对话框保存操作
+function doAdd(){
+	if (checkBeforeAddSubmit()) {
+		$("#ff").submit();
+	}
+}
+//对话框取消
+function closeAdd(){
+	$("#dlg").dialog("close");
+}
 
 //编辑操作
-function doEdit(){
+function openEdit(){
 	var rowObjArr=$("#dg").datagrid('getSelections');
 	if(rowObjArr.length != 1){
 		alert("请选择一条要编辑的信息!");				
 		return;
 	}
-	$("#dlg").dialog('setTitle','编辑资讯');
-	$("#dlg").dialog('open');
-	for(var i in rowObjArr[0]) {
-		alert(i + "--" + rowObjArr[0][i]);
-	}
+	$("#edit-dlg").dialog('setTitle','编辑资讯');
+	$("#edit-dlg").dialog('open');
 	editDialogInit(rowObjArr[0]);
+}
+//编辑对话框保存操作
+function doEdit(){
+	if (checkBeforeEditSubmit()) {
+		$("#edit_ff").submit();
+	}
+}
+//编辑对话框取消
+function closeEdit(){
+	$("#edit-dlg").dialog("close");
 }
 		
 //删除操作
@@ -70,19 +87,8 @@ function doDelete(){
 	);
 }
 
-//对话框保存操作
-function doSave(){
-	if (checkBeforeSubmit()) {
-		$("#ff").submit();
-	}
-}
-//对话框取消
-function doClose(){
-	$("#dlg").dialog("close");
-}
-
 //验证
-function checkBeforeSubmit(){
+function checkBeforeAddSubmit(){
 	var _name = $('#name').val();
 	var _title = $('#title').val();
 	var _imageAddress = $('#imageAddress').filebox('getValue');
@@ -120,6 +126,38 @@ function checkBeforeSubmit(){
 	}
 	return true;
 }
+//编辑验证
+function checkBeforeEditSubmit(){
+	var _name = $('#edit_name').val();
+	var _title = $('#edit_title').val();
+	var _source = $('#edit_source').val();
+	var _detail = $('#edit_detail').val();
+	if(_name === ""){
+		$("#edit_nameIsNull").html("<font color='red'>标题不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_nameIsNull").html("");
+	}
+	if(_title === ""){
+		$("#edit_titleIsNull").html("<font color='red'>摘要不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_titleIsNull").html("");
+	}
+	if(_source === ""){
+		$("#edit_sourceIsNull").html("<font color='red'>出处不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_sourceIsNull").html("");
+	}
+	if(_detail === ""){
+		$("#edit_detailIsNull").html("<font color='red'>详情不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_detailIsNull").html("");
+	}
+	return true;
+}
 //对话框恢复初始状体
 function addDialogInit(){
 	$('#name').textbox('setValue','');
@@ -135,14 +173,15 @@ function addDialogInit(){
 }
 
 function editDialogInit(row){
-	$('#name').textbox('setValue', row.name);
-	$('#title').textbox('setValue', row.title);
-	$('#imageAddress').filebox('setValue', row.imageAddress);
-	$('#source').textbox('setValue', row.source);
-	$('#detail').textbox('setValue', row.detail);
-	$("#nameIsNull").html("");
-	$("#titleIsNull").html("");
-	$("#imageIsNull").html("");
-	$("#sourceIsNull").html("");
-	$("#detailIsNull").html("");
+	$('#edit_id').val(row.id);
+	$('#edit_image').val(row.imageAddress);
+	$('#edit_name').textbox('setValue', row.name);
+	$('#edit_title').textbox('setValue', row.title);
+	$('#edit_imageUrl').attr('src', '../../' + row.imageAddress);
+	$('#edit_source').textbox('setValue', row.source);
+	$('#edit_detail').textbox('setValue', row.detail);
+	$("#edit_nameIsNull").html("");
+	$("#edit_titleIsNull").html("");
+	$("#edit_sourceIsNull").html("");
+	$("#edit_detailIsNull").html("");
 }
