@@ -46,7 +46,7 @@
 		</table>
     </div>
 	
-    <div id="dlg" class="easyui-dialog" style="width:500px;height:500px;" data-options="closed:true,buttons:'#dlg-buttons'">
+    <div id="dlg" class="easyui-dialog" style="width:500px;height:95%;" data-options="closed:true,buttons:'#dlg-buttons'">
     	<form id="ff" method="post" enctype="multipart/form-data" action="/manage/box/add.do"> 
     		<br/>&nbsp;名称:<input id="name" class="easyui-textbox" name="name"/>&nbsp;<span id="nameIsNull"></span><br/><br/>
     		&nbsp;摘要:<input id="title" class="easyui-textbox" name="title"/>&nbsp;<span id="titleIsNull"></span><br/><br/>
@@ -60,7 +60,7 @@
 		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="doClose()">取消</a>
 	</div>
     
-    <div id="infoDlg" class="easyui-dialog" style="width:600px;height:800px;" data-options="closed:true,buttons:'#info-dlg-buttons'">
+    <div id="infoDlg" class="easyui-dialog" style="width:600px;height:95%;" data-options="closed:true,buttons:'#info-dlg-buttons'">
    		<input type="hidden" id="boxId" name="id" value=""/> 
    		<table id="info-dg" class="easyui-datagrid"></table>
     </div>

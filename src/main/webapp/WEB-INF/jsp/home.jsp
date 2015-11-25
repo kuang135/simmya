@@ -10,7 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="/jquery-easyui-1.4.1/themes/icon.css">
 </head>
 <body class="easyui-layout">
-    <div data-options="region:'north',split:true" style="height:80px;">
+    <div data-options="region:'north',split:true" style="height:60px;">
     	<table border="0" width="100%" height="100%">
     		<tr>
     			<td align="center"><font size="5" color="green">&nbsp;欢迎您,亲爱的用户</font></td>

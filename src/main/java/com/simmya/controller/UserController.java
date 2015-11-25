@@ -194,12 +194,15 @@ public class UserController {
 			  @RequestParam(value = "zodiac", required = true)String zodiac,
 			  @RequestParam(value = "nickName", required = true)String nickName,
 			  @RequestParam(value = "profession", required = true)String profession) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtils.isBlank(token)) {
-			return Collections.emptyMap();
+			map.put("code", "error");
+			return map;
 		}
 		User loginUser = userService.checkLogin(token);
 		if (loginUser == null) {
-			return Collections.emptyMap();
+			map.put("code", "error");
+			return map;
 		}
 		loginUser.setBirth(new SimpleDateFormat("yyyyMMdd").parse(birth));
 		loginUser.setGender(gender);

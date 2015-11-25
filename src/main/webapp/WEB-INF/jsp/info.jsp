@@ -47,7 +47,7 @@
 		</table>
     </div>
 	
-	 <div id="dlg" class="easyui-dialog" style="width:500px;height:500px;" data-options="closed:true,buttons:'#dlg-buttons'">
+	 <div id="dlg" class="easyui-dialog" style="width:500px;height:95%;" data-options="closed:true,buttons:'#dlg-buttons'">
     	<form id="ff" method="post" enctype="multipart/form-data" action="/manage/info/add.do"> 
     		<br/>&nbsp;标题:<input id="name" class="easyui-textbox" name="name"/>&nbsp;<span id="nameIsNull"></span><br/><br/>
     		&nbsp;摘要:<input id="title" class="easyui-textbox" name="title"/>&nbsp;<span id="titleIsNull"></span><br/><br/>
@@ -62,7 +62,7 @@
 	</div>
 	
 	
-	<div id="edit-dlg" class="easyui-dialog" style="width:500px;height:500px;" data-options="closed:true,buttons:'#edit-dlg-buttons'">
+	<div id="edit-dlg" class="easyui-dialog" style="width:500px;height:95%;" data-options="closed:true,buttons:'#edit-dlg-buttons'">
     	<form id="edit_ff" method="post" enctype="multipart/form-data" action="/manage/info/edit.do">
     		<input type="hidden" id="edit_id" name="id" value=""/> 
     		<input type="hidden" id="edit_image" name="imageAddress" value=""/> 
