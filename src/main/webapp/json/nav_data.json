@@ -1,5 +1,5 @@
 [
-   {"id":1,"text":"什么呀",
+   {"id":1,"text":"什么呀","iconCls":"icon-simmya",
    	"children":[{"id":11,"text":"info管理","attributes":{"url":"/manage/nav/info.do"}},
    				{"id":12,"text":"box管理","attributes":{"url":"/manage/nav/box.do"}},
    				{"id":13,"text":"order管理","attributes":{"url":"/manage/nav/order.do"}},
