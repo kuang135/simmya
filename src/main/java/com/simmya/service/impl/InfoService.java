@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simmya.easyui.DataGrid;
+import com.simmya.exception.SimmyaException;
 import com.simmya.mapper.BoxInfoRefMapper;
 import com.simmya.mapper.DiscussMapper;
 import com.simmya.mapper.InfoAgreeMapper;
@@ -213,7 +214,7 @@ public class InfoService extends BaseService<Info>{
 	}
 	
 	@Transactional
-	public int deleteByIds(String[] ids, String realPath) throws SQLException {
+	public int deleteByIds(String[] ids, String realPath) throws SimmyaException {
 		int count = 0;
 		String[] pic = new String[ids.length];
 		for(int i = 0; i < ids.length; i++) {
@@ -222,7 +223,7 @@ public class InfoService extends BaseService<Info>{
 			boxInfo.setInfoId(ids[i]);
 			List<BoxInfoRef> boxInfos = boxInfoMapper.select(boxInfo);
 			if (boxInfos != null && boxInfos.size() > 0) {
-				throw new SQLException();
+				throw new SimmyaException(" -- BOX_INFO_REF表中还存在着某个INFO -- ");
 			}
 			Info info = super.selectByPrimaryKey(ids[i]);
 			pic[i] = info.getImageAddress();

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simmya.easyui.DataGrid;
+import com.simmya.exception.SimmyaException;
 import com.simmya.mapper.BoxCollectionMapper;
 import com.simmya.mapper.BoxDiscussMapper;
 import com.simmya.mapper.BoxInfoRefMapper;
@@ -145,7 +146,7 @@ public class BoxService extends BaseService<Box>{
 	}
 
 	@Transactional
-	public int deleteByIds(String[] ids, String realPath) throws SQLException {
+	public int deleteByIds(String[] ids, String realPath) throws SimmyaException {
 		int count = 0;
 		String[] pic = new String[ids.length];
 		for(int i = 0; i < ids.length; i++) {
@@ -154,7 +155,7 @@ public class BoxService extends BaseService<Box>{
 			orderBox.setBoxId(ids[i]);
 			List<OrderBoxRef> orderBoxs = orderBoxMapper.select(orderBox);
 			if (orderBoxs != null && orderBoxs.size() > 0) {
-				throw new SQLException();
+				throw new SimmyaException(" -- ORDER_BOX_REF表中还存在着某个BOX -- ");
 			}
 		}
 		for(int i = 0; i < ids.length; i++) {

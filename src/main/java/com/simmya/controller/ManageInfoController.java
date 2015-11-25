@@ -84,6 +84,7 @@ public class ManageInfoController {
 			count = infoService.deleteByIds(idsArr, realPath);
 			ajaxResult = new AjaxResult(200, "成功删除" + count + "条资讯。");
 		} catch (Exception e) {
+			e.printStackTrace();
 			ajaxResult = new AjaxResult(400, "有box正在使用某条info，删除失败。");
 		}
 		return ajaxResult;

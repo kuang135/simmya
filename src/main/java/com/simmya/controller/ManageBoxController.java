@@ -144,7 +144,7 @@ public class ManageBoxController {
 			ajaxResult = new AjaxResult(200, "咨询修改成功。");
 		} catch (Exception e) {
 			e.printStackTrace();
-			ajaxResult = new AjaxResult(400, "咨询修改失败。");
+			ajaxResult = new AjaxResult(400, "咨询修改失败,有用户仍旧订阅了该盒子中的咨询。");
 		}
 		return ajaxResult;
 	}
