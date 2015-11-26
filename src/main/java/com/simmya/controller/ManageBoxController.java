@@ -118,6 +118,7 @@ public class ManageBoxController {
 				}
 			}
 		}
+		//test
 		Collections.sort(infos, new Comparator<Info>(){
 			public int compare(Info o1, Info o2) {
 				if (!o1.isSelected() && o2.isSelected()) {
