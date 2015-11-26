@@ -19,15 +19,15 @@
 	            <th data-options="field:'ck',checkbox:true"></th>
 	            <th data-options="field:'id',hidden:true">id</th>
 	            <th data-options="field:'name',width:200,align:'center'">标题</th>
-	            <th data-options="field:'title',width:200,align:'center'">摘要</th>
-	            <th data-options="field:'detail',width:250,align:'center'">详细内容</th>
-	            <th data-options="field:'imageAddress',width:250,align:'center'">图片地址</th>
-	            <th data-options="field:'source',width:250,align:'center'">咨询出处</th>
-	            <th data-options="field:'collectCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">收藏数</th>
-	            <th data-options="field:'shareCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">分享数</th>
-	            <th data-options="field:'discussCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">评论数</th>
-	            <th data-options="field:'agreeCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">点赞数</th>
-	            <th data-options="field:'clickCount',width:250,align:'center',formatter:function(value){return value === null? 0: value}">点击数</th>
+	            <th data-options="field:'title',width:300,align:'center'">摘要</th>
+	            <th data-options="field:'detail',width:600,align:'center'">详细内容</th>
+	            <!-- <th data-options="field:'imageAddress',width:500,align:'center'">图片地址</th> -->
+	            <th data-options="field:'source',width:400,align:'center'">咨询出处</th>
+	            <th data-options="field:'collectCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">收藏数</th>
+	            <th data-options="field:'shareCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">分享数</th>
+	            <th data-options="field:'discussCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">评论数</th>
+	            <th data-options="field:'agreeCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">点赞数</th>
+	            <th data-options="field:'clickCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">点击数</th>
 	        </tr>
 	    </thead>
 	</table>
@@ -53,7 +53,7 @@
     		&nbsp;摘要:<input id="title" class="easyui-textbox" name="title"/>&nbsp;<span id="titleIsNull"></span><br/><br/>
     		&nbsp;上传图片:<input id="imageAddress" name="file" class="easyui-filebox" data-options="width:300,buttonText:'请选择文件'"/>&nbsp;<span id="imageIsNull"></span><br/><br/>
     		&nbsp;资讯出处:<input id="source" class="easyui-textbox" name="source" style="width:200px"/>&nbsp;<span id="sourceIsNull"></span><br/><br/>
-    		&nbsp;详细内容:<input id="detail" class="easyui-textbox" name="detail" data-options="width:300,height:200"/>&nbsp;<span id="detailIsNull"></span>
+    		&nbsp;详细内容:<input id="detail" class="easyui-textbox" name="detail" data-options="multiline:true,width:300,height:200"/>&nbsp;<span id="detailIsNull"></span>
 		</form>  
     </div>
     <div id="dlg-buttons">
@@ -71,7 +71,7 @@
     		&nbsp;图片:<img id="edit_imageUrl" src=""/><br/><br/>
     		&nbsp;更改图片:<input id="edit_imageAddress" name="edit_file" class="easyui-filebox" data-options="width:300,buttonText:'请选择文件'"/><br/><br/>
     		&nbsp;资讯出处:<input id="edit_source" class="easyui-textbox" name="source" style="width:200px"/>&nbsp;<span id="edit_sourceIsNull"></span><br/><br/>
-    		&nbsp;详细内容:<input id="edit_detail" class="easyui-textbox" name="detail" data-options="width:300,height:200"/>&nbsp;<span id="edit_detailIsNull"></span>
+    		&nbsp;详细内容:<input id="edit_detail" class="easyui-textbox" name="detail" data-options="multiline:true,width:300,height:200"/>&nbsp;<span id="edit_detailIsNull"></span>
 		</form>  
     </div>
     <div id="edit-dlg-buttons">

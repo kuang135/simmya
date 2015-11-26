@@ -28,6 +28,7 @@ import com.simmya.pojo.BoxInfoRef;
 import com.simmya.pojo.OrderBoxRef;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
+import com.simmya.util.StringUtil;
 
 @Service
 public class BoxService extends BaseService<Box>{
@@ -138,8 +139,12 @@ public class BoxService extends BaseService<Box>{
 		List<Box> boxes = boxMapper.selectByName(box.getName());
 		PageInfo<Box> pageInfo=new PageInfo<Box>(boxes);
 		DataGrid datagrid=new DataGrid();
-        if(boxes!=null){
+        if(boxes != null){
         	datagrid.setTotal((int)pageInfo.getTotal());
+        	for (Box bean : boxes) {
+				String newDetail = StringUtil.insertTagByDistance(bean.getDetail().replace("<br/>", ""), "<br/>", 32);
+				bean.setDetail(newDetail);
+			}
         	datagrid.setRows(boxes);
         }
         return datagrid;

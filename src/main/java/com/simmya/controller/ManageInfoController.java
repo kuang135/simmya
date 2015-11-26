@@ -30,7 +30,7 @@ public class ManageInfoController {
 	
 	@RequestMapping(value= "/list", method = RequestMethod.POST)
 	@ResponseBody
-	public DataGrid info(@RequestParam(value="page")int page,
+	public DataGrid list(@RequestParam(value="page")int page,
 			@RequestParam(value="rows")int rows,
 			@RequestParam(value="name",required = false)String name) {
 		Info info = new Info();

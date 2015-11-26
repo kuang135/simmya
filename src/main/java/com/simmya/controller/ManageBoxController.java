@@ -41,7 +41,7 @@ public class ManageBoxController {
 	
 	@RequestMapping(value= "/list", method = RequestMethod.POST)
 	@ResponseBody
-	public DataGrid box(@RequestParam(value="page")int page,
+	public DataGrid list(@RequestParam(value="page")int page,
 			@RequestParam(value="rows")int rows,
 			@RequestParam(value="name",required = false)String name) {
 		Box box = new Box();
@@ -148,4 +148,49 @@ public class ManageBoxController {
 		}
 		return ajaxResult;
 	}
+	
+	
+	@RequestMapping(value= "/edit.do", method = RequestMethod.POST)
+	public String boxEdit(HttpServletRequest request,
+			@RequestParam("edit_file") MultipartFile multipartFile) {
+		try {
+			Box box = new Box();
+			box.setId(request.getParameter("id"));
+			box.setName(request.getParameter("name"));
+			box.setTitle(request.getParameter("title"));
+			String boxPrice = request.getParameter("boxPrice");
+			box.setBoxPrice(new BigDecimal(boxPrice));
+			box.setDetail(request.getParameter("detail"));
+			if (multipartFile.isEmpty()) {
+				box.setImageAddress(request.getParameter("imageAddress"));
+			} else {
+				String originalFilename = multipartFile.getOriginalFilename();
+				String suffix = StringUtils.substringAfter(originalFilename, ".");
+				String uuid = UUID.randomUUID().toString().replace("-", "");
+				String realPath = request.getSession().getServletContext().getRealPath("/pic/box");
+				String dirPath = realPath + FilePathUtil.createPath();
+				File dir = new File(dirPath);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				String name = dirPath + File.separator + uuid + "." + suffix;
+				File file = new File(name);
+				multipartFile.transferTo(file);
+				box.setImageAddress("pic" + File.separator + "box" + FilePathUtil.createPath() + File.separator + uuid + "." + suffix);
+			}
+			//更新操作
+			boxService.updateSelective(box);
+			//删除原来的图片文件
+			if (!multipartFile.isEmpty()) {
+				File oldFile = new File(request.getSession().getServletContext().getRealPath("/"), request.getParameter("imageAddress"));
+				if (oldFile.exists()) {
+					oldFile.delete();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "box";
+	}
+	
 }

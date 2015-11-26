@@ -29,7 +29,7 @@ function closeAdd(){
 	$("#dlg").dialog("close");
 }
 
-//编辑操作
+//打开编辑对话框
 function openEdit(){
 	var rowObjArr=$("#dg").datagrid('getSelections');
 	if(rowObjArr.length != 1){
@@ -158,7 +158,7 @@ function checkBeforeEditSubmit(){
 	}
 	return true;
 }
-//对话框恢复初始状体
+//添加对话框恢复初始状体
 function addDialogInit(){
 	$('#name').textbox('setValue','');
 	$('#title').textbox('setValue','');
@@ -171,15 +171,16 @@ function addDialogInit(){
 	$("#sourceIsNull").html("");
 	$("#detailIsNull").html("");
 }
-
+//编辑对话框恢复初始状体
 function editDialogInit(row){
+	console.log(row.detail.replace('<br/>',''));
 	$('#edit_id').val(row.id);
 	$('#edit_image').val(row.imageAddress);
 	$('#edit_name').textbox('setValue', row.name);
 	$('#edit_title').textbox('setValue', row.title);
 	$('#edit_imageUrl').attr('src', '../../' + row.imageAddress);
 	$('#edit_source').textbox('setValue', row.source);
-	$('#edit_detail').textbox('setValue', row.detail);
+	$('#edit_detail').textbox('setValue', row.detail.replace(/<br\/>/g,''));
 	$("#edit_nameIsNull").html("");
 	$("#edit_titleIsNull").html("");
 	$("#edit_sourceIsNull").html("");

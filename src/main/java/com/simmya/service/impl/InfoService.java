@@ -29,6 +29,7 @@ import com.simmya.pojo.InfoCollection;
 import com.simmya.pojo.UserShareRef;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
+import com.simmya.util.StringUtil;
 
 @Service
 public class InfoService extends BaseService<Info>{
@@ -198,6 +199,10 @@ public class InfoService extends BaseService<Info>{
 		DataGrid datagrid=new DataGrid();
         if(list != null) {
         	datagrid.setTotal((int)pageInfo.getTotal());
+        	for (Info bean : list) {
+				String newDetail = StringUtil.insertTagByDistance(bean.getDetail().replace("<br/>", ""), "<br/>", 32);
+				bean.setDetail(newDetail);
+			}
         	datagrid.setRows(list);
         }
         return datagrid;

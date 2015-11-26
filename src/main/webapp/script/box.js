@@ -34,13 +34,13 @@ function addDialogInit(){
 	$("#detailIsNull").html("");
 }
 //对话框保存操作
-function doSave(){
-	if (checkBeforeSubmit()) {
+function doAdd(){
+	if (checkBeforeAddSubmit()) {
 		$("#ff").submit();
 	}
 }
 //对话框取消
-function doClose(){
+function closeAdd(){
 	$("#dlg").dialog("close");
 }
 //删除操作
@@ -78,7 +78,41 @@ function doDelete(){
 		}
 	);
 }
-
+//打开编辑对话框
+function openEdit(){
+	var rowObjArr=$("#dg").datagrid('getSelections');
+	if(rowObjArr.length != 1){
+		alert("请选择一条要编辑的信息!");				
+		return;
+	}
+	$("#edit-dlg").dialog('setTitle','编辑盒子');
+	$("#edit-dlg").dialog('open');
+	editDialogInit(rowObjArr[0]);
+}
+//编辑对话框恢复初始状体
+function editDialogInit(row){
+	$('#edit_id').val(row.id);
+	$('#edit_image').val(row.imageAddress);
+	$('#edit_name').textbox('setValue', row.name);
+	$('#edit_title').textbox('setValue', row.title);
+	$('#edit_imageUrl').attr('src', '../../' + row.imageAddress);
+	$('#edit_price').textbox('setValue', row.boxPrice);
+	$('#edit_detail').textbox('setValue', row.detail.replace(/<br\/>/g,''));
+	$("#edit_nameIsNull").html("");
+	$("#edit_titleIsNull").html("");
+	$("#edit_priceIsNull").html("");
+	$("#edit_detailIsNull").html("");
+}
+//编辑对话框保存操作
+function doEdit(){
+	if (checkBeforeEditSubmit()) {
+		$("#edit_ff").submit();
+	}
+}
+//关闭编辑对话框
+function closeEdit(){
+	$("#edit-dlg").dialog("close");
+}
 
 //修改资讯：添加，删除
 function openInfo() {
@@ -144,8 +178,8 @@ function saveInfo(){
 function closeInfo(){
 	$("#infoDlg").dialog("close");
 }
-//验证
-function checkBeforeSubmit(){
+//添加提交验证
+function checkBeforeAddSubmit(){
 	var _name = $('#name').val();
 	var _title = $('#title').val();
 	var _imageAddress = $('#imageAddress').filebox('getValue');
@@ -188,3 +222,42 @@ function checkBeforeSubmit(){
 	}
 	return true;
 }
+
+//编辑提交验证
+function checkBeforeEditSubmit(){
+	var _name = $('#edit_name').val();
+	var _title = $('#edit_title').val();
+	var _price = $('#edit_price').val();
+	var _detail = $('#edit_detail').val();
+	if(_name === ""){
+		$("#edit_nameIsNull").html("<font color='red'>名称不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_nameIsNull").html("");
+	}
+	if(_title === ""){
+		$("#edit_titleIsNull").html("<font color='red'>摘要不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_titleIsNull").html("");
+	}
+	if(!/^\d+(\.\d{2})?$/.test(_price)){
+		$("#edit_priceIsNull").html("<font color='red'>价格只能是整数或两位小数!</font>");
+		return false;
+	}else{
+		if (/^0+[1-9]+(\.\d{2})?$/.test(_price)) {
+			$("#edit_priceIsNull").html("<font color='red'>价格只能是整数或两位小数!</font>");
+			return false;
+		} else {
+			$("#edit_priceIsNull").html("");
+		}
+	}
+	if(_detail === ""){
+		$("#edit_detailIsNull").html("<font color='red'>详情不能为空!</font>");
+		return false;
+	}else{
+		$("#edit_detailIsNull").html("");
+	}
+	return true;
+}
+
