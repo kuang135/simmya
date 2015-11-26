@@ -119,7 +119,6 @@ public class ManageBoxController {
 			}
 		}
 		Collections.sort(infos, new Comparator<Info>(){
-			@Override
 			public int compare(Info o1, Info o2) {
 				if (!o1.isSelected() && o2.isSelected()) {
 					return 1;
