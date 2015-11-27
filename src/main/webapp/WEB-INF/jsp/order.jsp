@@ -13,21 +13,18 @@
 	</head>
 	<body>
 		<table id="dg" class="easyui-datagrid" 
-			data-options="url:'/manage/order/list.do',fit:true,fitColumns:true,rownumbers:true,toolbar:'#toolbar',pagination:true,pageSize:20">
+			data-options="url:'/manage/order/list.do',fit:true,singleSelect:true,fitColumns:true,
+				rownumbers:true,toolbar:'#toolbar',pagination:true,pageSize:20,onDblClickRow:showBox">
 		    <thead>
 		        <tr>
-		            <th data-options="field:'ck',checkbox:true"></th>
-		            <th data-options="field:'id',hidden:true">id</th>
-		            <th data-options="field:'name',width:200,align:'center'">标题</th>
-		            <th data-options="field:'title',width:300,align:'center'">摘要</th>
-		            <th data-options="field:'detail',width:600,align:'center'">详细内容</th>
-		            <!-- <th data-options="field:'imageAddress',width:500,align:'center'">图片地址</th> -->
-		            <th data-options="field:'source',width:400,align:'center'">咨询出处</th>
-		            <th data-options="field:'collectCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">收藏数</th>
-		            <th data-options="field:'shareCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">分享数</th>
-		            <th data-options="field:'discussCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">评论数</th>
-		            <th data-options="field:'agreeCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">点赞数</th>
-		            <th data-options="field:'clickCount',width:80,align:'center',formatter:function(value){return value === null? 0: value}">点击数</th>
+		            <th data-options="field:'id',width:400,align:'center'">订单号</th>
+		            <th data-options="field:'status',width:200,align:'center'">订单状态</th>
+		            <th data-options="field:'totalPrice',width:200,align:'center'">总额</th>
+		            <th data-options="field:'createTime',width:200,align:'center'">创建时间</th>
+		            <th data-options="field:'address',width:400,align:'center'">收货地址</th>
+		            <th data-options="field:'getName',width:200,align:'center'">收货人姓名</th>
+		            <th data-options="field:'phone',width:200,align:'center'">手机号</th>
+		            <th data-options="field:'zipcode',width:100,align:'center'">邮编</th>
 		        </tr>
 		    </thead>
 		</table>
@@ -35,16 +32,22 @@
 			<table width="100%">
 				<tr>
 					<td align="left">
-						<input id="searchName" class="easyui-searchbox" data-options="prompt:'咨询名称',width:200,searcher:doSearch"/>
+						<select id="searchStatus" class="easyui-combobox" data-options="width:120,panelWidth:100,panelHeight:105">
+						    <option value="">不限</option>
+						    <option value="未付款">未付款</option>
+						    <option value="已付款">已付款</option>
+						    <option value="已完成">已完成</option>
+						    <option value="已退订">已退订</option>
+						</select>
+						<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()">搜索</a>
 	            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="doRefresh()"></a>
-					</td>
-					<td align="right">
-						<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'"  onclick="openAdd()">添加</a>
-	            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="doDelete()">删除</a>
-						<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'"  onclick="openEdit()">编辑</a>
 					</td>
 				</tr>
 			</table>
 	    </div>
+	    
+	    <div id="box-dlg" class="easyui-dialog" style="width:900px;height:95%;" data-options="closed:true">
+   		<table id="box-dg" class="easyui-datagrid"></table>
+    </div>
 	</body>
 </html>
