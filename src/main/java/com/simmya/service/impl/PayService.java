@@ -26,7 +26,7 @@ public class PayService extends BaseService<OrderBoxRef> {
 	private PayMapper payMapper;
 
 	@Transactional(rollbackFor = Exception.class)
-	public String saveOrderRef(OrdersCommit order, User loginUser) {
+	public Orders saveOrderRef(OrdersCommit order, User loginUser) {
 		Orders order_ = new Orders();
 		order_.setUserId(loginUser.getId());
 		order_.setStatus(OrderStatus.NotPayed);
@@ -46,7 +46,7 @@ public class PayService extends BaseService<OrderBoxRef> {
 			boxRef.setStatus(BoxStatus.NotCompleted);
 			super.save(boxRef);
 		}
-		return order_.getId();
+		return order_;
 	}
 	
 	public List<OrderV> getOrderListNoPay(User loginUser){

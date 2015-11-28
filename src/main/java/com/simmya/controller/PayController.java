@@ -56,9 +56,38 @@ public class PayController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			OrdersCommit orders=mapper.readValue(jsons, OrdersCommit.class);
-			String orderid=payService.saveOrderRef(orders,loginUser);
+			Orders orderx=payService.saveOrderRef(orders,loginUser);
+			Map<String, String> sParaTemp = new HashMap<String, String>(); 
+			sParaTemp.put("_input_charset", "utf-8");
+			sParaTemp.put("it_b_pay", "30m"); 
+			sParaTemp.put("notify_url", "http://115.159.42.41:6430/boxs/backZFB.do"); 
+			sParaTemp.put("out_trade_no", orderx.getId()); 
+			sParaTemp.put("partner", "2088511405850083"); 
+			sParaTemp.put("payment_type", "1"); 
+			//sParaTemp.put("return_url", "http://115.159.42.41:6430/boxs/returnZFB.do"); 
+			sParaTemp.put("seller_id", "nuanuan1210@qq.com"); 
+			sParaTemp.put("service", "mobile.securitypay.pay"); 
+			sParaTemp.put("subject", "盒子购买"); 
+			sParaTemp.put("total_fee", String.valueOf(orderx.getTotalPrice()));
+			
+			
+			String sb="_input_charset="+sParaTemp.get("_input_charset");
+			sb+="&it_b_pay="+sParaTemp.get("it_b_pay");
+			sb+="&notify_url="+sParaTemp.get("notify_url");
+			sb+="&out_trade_no="+sParaTemp.get("out_trade_no");			
+			sb+="&partner="+sParaTemp.get("partner");
+			sb+="&payment_type="+sParaTemp.get("payment_type");
+			//sb+="&return_url="+sParaTemp.get("return_url");			
+			sb+="&seller_id="+sParaTemp.get("seller_id");
+			sb+="&service="+sParaTemp.get("service");
+			sb+="&subject="+sParaTemp.get("subject");
+			sb+="&total_fee="+sParaTemp.get("total_fee");		
+			sb+="&sign=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
+			sb+="&sign_type=RSA";
 			map.put("code", "sucess");
-			map.put("desc", orderid);
+			map.put("desc", sb.toString());
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,17 +96,24 @@ public class PayController {
 		return map;
 	}
 	
-	@RequestMapping(value= "/boxs/backZFB", method = RequestMethod.GET)
+//	@RequestMapping(value= "/boxs/returnZFB", method = RequestMethod.GET)
+//	@ResponseBody
+//	public Map<String, Object> returnZFB() throws SQLException {
+//		HashMap<String, Object> map = new HashMap<String, Object>();
+//		map.put("code", "sucess");
+//		return map;
+//	}
+	
+	
+	@RequestMapping(value= "/boxs/backZFB", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> backZFB(@RequestParam(value = "out_trade_no", required = true)String out_trade_no) throws SQLException {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("code", "error");
+	public String backZFB(@RequestParam(value = "out_trade_no", required = true)String out_trade_no) throws SQLException {
+		String returnString="error";
 		Orders order=ordersService.selectByPrimaryKey(out_trade_no);
 		order.setStatus(OrderStatus.Payed);
 		ordersService.update(order);
-		map.put("code", "sucess");
-		return map;
+		returnString="success";
+		return returnString;
 	}
 	
 	@RequestMapping(value= "/user/ordersNoPay", method = RequestMethod.GET)
@@ -92,4 +128,6 @@ public class PayController {
 		}
 		return payService.getOrderListNoPay(loginUser);
 	}
+	
+	
 }
