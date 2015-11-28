@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 import tk.mybatis.mapper.common.Mapper;
 
@@ -33,14 +34,25 @@ public class BaseService<T> {
 		return mapper.selectAll();
 	}
 	
-	public List<T> selectPage(int pageNum,int pageSize){
+	public PageInfo<T> selectPage(int pageNum,int pageSize){
 		PageHelper.startPage(pageNum, pageSize);
-		return mapper.select(null);
+		List<T> list = mapper.select(null);
+		PageInfo<T> pageInfo=new PageInfo<T>(list);
+		return pageInfo;
 	}
 	
-	public List<T> selectPageByWhere(int pageNum,int pageSize, T t){
+	public PageInfo<T> selectPage(int pageNum,int pageSize, String order){
+		PageHelper.startPage(pageNum, pageSize, order);
+		List<T> list = mapper.select(null);
+		PageInfo<T> pageInfo=new PageInfo<T>(list);
+		return pageInfo;
+	}
+	
+	public PageInfo<T> selectPageByWhere(int pageNum,int pageSize, T t){
 		PageHelper.startPage(pageNum, pageSize);
-		return mapper.select(t);
+		List<T> list = mapper.select(t);
+		PageInfo<T> pageInfo=new PageInfo<T>(list);
+		return pageInfo;
 	}
 	
 	/*

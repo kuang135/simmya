@@ -137,7 +137,7 @@ public class OrdersService extends BaseService<Orders>{
 
 
 	public DataGrid getOrderDataGrid(int page, int rows, Orders orders) {
-		PageHelper.startPage(page, rows);
+		PageHelper.startPage(page, rows, "CREATE_TIME DESC");
 		List<Orders> list = orderMapper.selectByStatus(orders.getStatus());
 		PageInfo<Orders> pageInfo=new PageInfo<Orders>(list);
 		DataGrid datagrid=new DataGrid();
@@ -154,7 +154,8 @@ public class OrdersService extends BaseService<Orders>{
 				+ " a.SEND_COUNT sendCount,DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTime "
 				+ " FROM order_box_ref a "
 				+ " LEFT JOIN box b ON a.BOX_ID = b.ID "
-				+ " WHERE a.ORDER_ID = ?";
+				+ " WHERE a.ORDER_ID = ? "
+				+ " ORDER BY a.UPDATE_TIME DESC";
 		List<Map<String, Object>> list = DbUtil.getMapList(sql, orderid);
 		DataGrid datagrid=new DataGrid();
         if(list != null) {
