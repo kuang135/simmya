@@ -112,7 +112,7 @@ public class PayController {
 		Orders order=ordersService.selectByPrimaryKey(out_trade_no);
 		order.setStatus(OrderStatus.Payed);
 		ordersService.update(order);
-		returnString="success";
+		returnString = "success";
 		return returnString;
 	}
 	
