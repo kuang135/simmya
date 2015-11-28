@@ -1,6 +1,6 @@
 [
    {"id":1,"text":"什么呀","iconCls":"icon-simmya",
-   	"children":[{"id":11,"text":"咨询管理","attributes":{"url":"/manage/nav/info.do"}},
+   	"children":[{"id":11,"text":"资讯管理","attributes":{"url":"/manage/nav/info.do"}},
    				{"id":12,"text":"盒子管理","attributes":{"url":"/manage/nav/box.do"}},
    				{"id":13,"text":"订单管理","attributes":{"url":"/manage/nav/order.do"}},
    				{"id":14,"text":"推送管理","attributes":{"url":"/manage/nav/push.do"}}]}

@@ -128,7 +128,7 @@ function openInfo() {
 	$('#info-dg').datagrid('clearSelections');
 	$('#info-dg').datagrid({
 	    url:'/manage/box/info.do?boxid='+row.id,
-	    fit:true,fitColumns:true,rownumbers:true,pagination:false,pageSize:20,
+	    fit:true,fitColumns:true,rownumbers:true,pagination:false,
 	    idField:'id',
 	    treeField:'name',
 	    columns:[[
@@ -140,7 +140,6 @@ function openInfo() {
 	    		len = data.rows.length;
 	    	for (var i = 0; i < len; i++) {
 	    		if (rs[i].selected) {
-	    			console.log(rs[i].id);
 	    			$('#info-dg').datagrid('selectRecord', rs[i].id);
 	    		}
 	    	} 

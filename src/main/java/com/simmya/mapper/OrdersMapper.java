@@ -14,5 +14,7 @@ import com.simmya.vo.OrderV;
 public interface OrdersMapper extends Mapper<Orders> {
    
 	List<OrderV> getOrderListByUserid(@Param("userid")String userid);
+
+	List<Orders> selectByStatus(@Param("status")String status);
 	
 }

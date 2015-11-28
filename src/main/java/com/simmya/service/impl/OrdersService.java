@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.simmya.constant.BoxStatus;
 import com.simmya.constant.OrderStatus;
+import com.simmya.easyui.DataGrid;
 import com.simmya.mapper.BackBoxMapper;
 import com.simmya.mapper.BackOrderMapper;
 import com.simmya.mapper.OrderBoxRefMapper;
@@ -130,6 +133,35 @@ public class OrdersService extends BaseService<Orders>{
 			}
 		}
 		return map;
+	}
+
+
+	public DataGrid getOrderDataGrid(int page, int rows, Orders orders) {
+		PageHelper.startPage(page, rows);
+		List<Orders> list = orderMapper.selectByStatus(orders.getStatus());
+		PageInfo<Orders> pageInfo=new PageInfo<Orders>(list);
+		DataGrid datagrid=new DataGrid();
+        if(list != null) {
+        	datagrid.setTotal((int)pageInfo.getTotal());
+        	datagrid.setRows(list);
+        }
+        return datagrid;
+	}
+
+
+	public DataGrid getBoxDataGrid(String orderid) throws SQLException {
+		String sql = "SELECT b.NAME name,b.BOX_PRICE boxPrice,a.ORDER_COUNT orderCount,a.ORDER_WAY orderWay,a.STATUS status,"
+				+ " a.SEND_COUNT sendCount,DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTime "
+				+ " FROM order_box_ref a "
+				+ " LEFT JOIN box b ON a.BOX_ID = b.ID "
+				+ " WHERE a.ORDER_ID = ?";
+		List<Map<String, Object>> list = DbUtil.getMapList(sql, orderid);
+		DataGrid datagrid=new DataGrid();
+        if(list != null) {
+        	datagrid.setTotal(list.size());
+        	datagrid.setRows(list);
+        }
+        return datagrid;
 	}
 
 }
