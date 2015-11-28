@@ -64,10 +64,11 @@ public class PushService extends BaseService<Push>{
             LOG.info("Error Message: " + e.getErrorMessage());
             LOG.info("Msg ID: " + e.getMsgId());
             throw new SimmyaException("推送失败 ");
+        } finally {
+        	push.setMessage(message);
+        	push.setCreateTime(new Date());
+        	super.save(push);
         }
-        push.setMessage(message);
-        push.setCreateTime(new Date());
-        super.save(push);
 	}
 	
 	
