@@ -1,5 +1,6 @@
 package com.simmya.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simmya.alipay.config.AlipayConfig;
+import com.simmya.alipay.sign.RSA;
+import com.simmya.alipay.util.AlipayCore;
 import com.simmya.constant.OrderStatus;
 import com.simmya.pojo.Orders;
 import com.simmya.pojo.OrdersCommit;
@@ -69,21 +73,10 @@ public class PayController {
 			sParaTemp.put("service", "mobile.securitypay.pay"); 
 			sParaTemp.put("subject", "盒子购买"); 
 			sParaTemp.put("total_fee", String.valueOf(orderx.getTotalPrice()));
-			
-			
-			String sb="_input_charset="+sParaTemp.get("_input_charset");
-			sb+="&it_b_pay="+sParaTemp.get("it_b_pay");
-			sb+="&notify_url="+sParaTemp.get("notify_url");
-			sb+="&out_trade_no="+sParaTemp.get("out_trade_no");			
-			sb+="&partner="+sParaTemp.get("partner");
-			sb+="&payment_type="+sParaTemp.get("payment_type");
-			//sb+="&return_url="+sParaTemp.get("return_url");			
-			sb+="&seller_id="+sParaTemp.get("seller_id");
-			sb+="&service="+sParaTemp.get("service");
-			sb+="&subject="+sParaTemp.get("subject");
-			sb+="&total_fee="+sParaTemp.get("total_fee");		
-			sb+="&sign=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB";
-			sb+="&sign_type=RSA";
+
+			String aliStr=AlipayCore.createLinkString(AlipayCore.paraFilter(sParaTemp));
+			String rsaStr=RSA.sign(aliStr, AlipayConfig.private_key, AlipayConfig.input_charset);
+			String sb=aliStr+"&sign="+rsaStr+"&sign_type=RSA";
 			map.put("code", "sucess");
 			map.put("desc", sb.toString());
 			
@@ -107,9 +100,10 @@ public class PayController {
 	
 	@RequestMapping(value= "/boxs/backZFB", method = RequestMethod.POST)
 	@ResponseBody
-	public String backZFB(@RequestParam(value = "out_trade_no", required = true)String out_trade_no) throws SQLException {
+	public String backZFB(@RequestParam(value = "out_trade_no", required = true)String out_trade_no) throws SQLException, UnsupportedEncodingException {
 		String returnString="error";
-		Orders order=ordersService.selectByPrimaryKey(out_trade_no);
+		String out_trade_no_ = new String(out_trade_no.getBytes("ISO-8859-1"),"UTF-8");
+		Orders order=ordersService.selectByPrimaryKey(out_trade_no_);
 		order.setStatus(OrderStatus.Payed);
 		ordersService.update(order);
 		returnString = "success";
