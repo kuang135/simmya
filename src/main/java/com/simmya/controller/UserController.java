@@ -99,7 +99,7 @@ public class UserController {
 		
 		String url = "http://222.73.117.158/msg/";// 应用地址
 		String account = "jiekou-clcs-10";// 账号
-		String pswd = "Tch123123";// 密码
+		String pswd = "Tch666777";// 密码
 		String mobile = name;// 手机号码，多个号码使用","分割
 		int randsu=MathUtil.nextInt(100000, 999999);
 		String msg = "您好，您的验证码是"+String.valueOf(randsu);// 短信内容
