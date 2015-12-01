@@ -104,9 +104,11 @@ public class PayController {
 		String returnString="error";
 		String out_trade_no_ = new String(out_trade_no.getBytes("ISO-8859-1"),"UTF-8");
 		Orders order=ordersService.selectByPrimaryKey(out_trade_no_);
-		order.setStatus(OrderStatus.Payed);
-		ordersService.update(order);
-		returnString = "success";
+		if(order!=null){
+			order.setStatus(OrderStatus.Payed);
+			ordersService.update(order);
+			returnString = "success";
+		}
 		return returnString;
 	}
 	
