@@ -21,11 +21,15 @@ public class InfoCollectionService extends BaseService<InfoCollection>{
 	 * 'discussCount':4,'imageAddress':'接口前缀+/image1.pig',
 	 * 'shareCount':4,'source':'www.baidu.com\xx','clickCount':'4'}]
 	 */
-	public List<Map<String, Object>> list(String id) throws SQLException {
+	public List<Map<String, Object>> list(String id, String url) throws SQLException {
 		String sql = "SELECT b.ID id,b.NAME NAME,b.TITLE TITLE,b.DETAIL detail,"
-				+ " b.COLLECT_COUNT collectCount,b.AGREE_COUNT agreeCount,"
-				+ " b.DISCUSS_COUNT discussCount,b.IMAGE_ADDRESS imageAddress,"
-				+ " b.SHARE_COUNT shareCount,b.SOURCE source,b.CLICK_COUNT clickCount "
+				+ " COALESCE(b.COLLECT_COUNT,0) collectCount,"
+				+ " COALESCE(b.AGREE_COUNT,0) agreeCount,"
+				+ " COALESCE(b.DISCUSS_COUNT,0) discussCount,"
+				+ " CONCAT('" + url +"',CASE WHEN b.IMAGE_ADDRESS IS NOT NULL THEN REPLACE(b.IMAGE_ADDRESS,'\\\\','/') END) imageAddress,"
+				+ " COALESCE(b.SHARE_COUNT,0) shareCount,"
+				+ " COALESCE(b.CLICK_COUNT,0) clickCount, "
+				+ " b.SOURCE source "
 				+ " FROM info_collection a "
 				+ " LEFT JOIN info b ON a.INFO_ID = b.ID "
 				+ " WHERE a.USER_ID = ?";

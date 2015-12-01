@@ -20,10 +20,12 @@ public class BoxCollectionService extends BaseService<BoxCollection>{
 	 * 'detail':'手工烧麦',imageAddress':'接口前缀+/image1.pig',
 	 * 'shareCount':4,'boxPrice':100,'collectCount':'4'}
 	 * */
-	public List<Map<String, Object>> list(String id) throws SQLException {
+	public List<Map<String, Object>> list(String id, String url) throws SQLException {
 		String sql = "SELECT b.ID id,b.NAME NAME,b.TITLE TITLE,b.DETAIL detail,"
-				+ " b.IMAGE_ADDRESS imageAddress,b.SHARE_COUNT shareCount,"
-				+ " b.BOX_PRICE boxPrice,b.COLLECT_COUNT collectCount "
+				+ " b.BOX_PRICE boxPrice,"
+				+ " CONCAT('" + url +"',CASE WHEN b.IMAGE_ADDRESS IS NOT NULL THEN REPLACE(b.IMAGE_ADDRESS,'\\\\','/') END) imageAddress,"
+				+ " COALESCE(b.SHARE_COUNT,0) shareCount,"
+				+ " COALESCE(b.COLLECT_COUNT,0) collectCount "
 				+ " FROM box_collection a "
 				+ " LEFT JOIN box b ON a.BOX_ID = b.ID "
 				+ " WHERE a.USER_ID = ?";

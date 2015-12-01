@@ -44,18 +44,24 @@ public class BoxService extends BaseService<Box>{
 	@Autowired
 	private BoxInfoRefMapper boxInfoMapper;
 	
-	public List<Map<String, Object>> listBox(int start, int size) throws SQLException {
-		String sql = "select ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
-				+ "	IMAGE_ADDRESS imageAddress,SHARE_COUNT shareCount,"
-				+ "	BOX_PRICE boxPrice,COLLECT_COUNT collectCount,DISCUSS_COUNT discussCount "
+	public List<Map<String, Object>> listBox(int start, int size, String url) throws SQLException {
+		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
+				+ " BOX_PRICE boxPrice, "
+				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " COALESCE(SHARE_COUNT,0) shareCount, "
+				+ " COALESCE(COLLECT_COUNT,0) collectCount, "
+				+ " COALESCE(DISCUSS_COUNT,0) discussCount "
 				+ "	from box limit ?,?";
 		return DbUtil.getMapList(sql, start, size);
 	}
 
-	public List<Map<String, Object>> detail(String boxid) throws SQLException {
+	public List<Map<String, Object>> detail(String boxid, String url) throws SQLException {
 		String sql = "select ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
-				+ "	IMAGE_ADDRESS imageAddress,SHARE_COUNT shareCount,"
-				+ "	BOX_PRICE boxPrice,COLLECT_COUNT collectCount,DISCUSS_COUNT discussCount "
+				+ "	BOX_PRICE boxPrice,"
+				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " COALESCE(SHARE_COUNT,0) shareCount, "
+				+ " COALESCE(COLLECT_COUNT,0) collectCount, "
+				+ " COALESCE(DISCUSS_COUNT,0) discussCount "
 				+ "	from box where id = ?";
 		return DbUtil.getMapList(sql, boxid);
 	}

@@ -10,8 +10,12 @@
 	</resultMap>
 	<select id="getOrderListByUserid" resultMap="one2many">
 		SELECT a.ID id,DATE_FORMAT(a.CREATE_TIME,'%Y%m%d %H:%i:%s') createTime,d.ADDRESS_INFO address,
-		c.ID box_id,c.NAME name, c.TITLE title,c.DETAIL detail,c.IMAGE_ADDRESS imageAddress,c.BOX_PRICE price,
-		b.ORDER_WAY orderWay,b.ORDER_COUNT orderCount,b.SEND_COUNT sendCount
+		c.ID box_id,c.NAME name, c.TITLE title,c.DETAIL detail,
+		c.BOX_PRICE price,
+		b.ORDER_WAY orderWay,
+		CONCAT('${url}',CASE WHEN c.IMAGE_ADDRESS IS NOT NULL THEN REPLACE(c.IMAGE_ADDRESS,'\\','/') END) imageAddress,
+		COALESCE(b.ORDER_COUNT,0) orderCount,
+		COALESCE(b.SEND_COUNT,0) sendCount 
 		FROM orders a
 		LEFT JOIN ORDER_BOX_REF b ON a.ID = b.ORDER_ID
 		LEFT JOIN BOX c ON c.ID = b.BOX_ID

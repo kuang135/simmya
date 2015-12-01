@@ -1,5 +1,7 @@
 package com.simmya.pojo;
 
+import java.math.BigDecimal;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -11,8 +13,20 @@ public class Carts {
     private String userId;
 
     private String boxIds;
+    
+    private BigDecimal boxPrice;
+    
+    
 
-    public String getId() {
+    public BigDecimal getBoxPrice() {
+		return boxPrice;
+	}
+
+	public void setBoxPrice(BigDecimal boxPrice) {
+		this.boxPrice = boxPrice;
+	}
+
+	public String getId() {
         return id;
     }
 

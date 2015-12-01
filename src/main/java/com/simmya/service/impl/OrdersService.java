@@ -48,8 +48,8 @@ public class OrdersService extends BaseService<Orders>{
 	 * 			'detail':'手工烧麦',imageAddress':'接口前缀+/image1.pig',
 	 * 			'price':'100','orderWay':'一周一次'，‘orderCount（订阅期限）’：‘5’,‘sendCount(已发期数)’:'3'}]
 	 */
-	public List<OrderV> listOrders(String id) throws SQLException {
-		List<OrderV> list = orderMapper.getOrderListByUserid(id);
+	public List<OrderV> listOrders(String id, String url) throws SQLException {
+		List<OrderV> list = orderMapper.getOrderListByUserid(id, url);
 		return list;
 	}
 
@@ -59,9 +59,12 @@ public class OrdersService extends BaseService<Orders>{
 	 * 'detail':'手工烧麦',imageAddress':'接口前缀+/image1.pig',
 	 * 'shareCount':4,'boxPrice':100,'collectCount':'4'}]
 	 */
-	public List<Map<String, Object>> listOrderBoxes(String userid, String orderid) throws SQLException {
-		String sql = "SELECT c.ID id,c.NAME NAME,c.TITLE TITLE,c.DETAIL detail,c.IMAGE_ADDRESS imageAddress, "
-				+ " c.SHARE_COUNT shareCount,c.BOX_PRICE boxPrice,c.COLLECT_COUNT collectCount "
+	public List<Map<String, Object>> listOrderBoxes(String userid, String orderid, String url) throws SQLException {
+		String sql = "SELECT c.ID id,c.NAME NAME,c.TITLE TITLE,c.DETAIL detail,"
+				+ " c.BOX_PRICE boxPrice,"
+				+ " CONCAT('"+url+"',CASE WHEN c.IMAGE_ADDRESS IS NOT NULL THEN REPLACE(c.IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " COALESCE(c.SHARE_COUNT,0) shareCount, "
+				+ " COALESCE(c.COLLECT_COUNT,0) collectCount " 
 				+ " FROM orders a "
 				+ " LEFT JOIN ORDER_BOX_REF b ON b.ORDER_ID = a.ID "
 				+ " LEFT JOIN box c ON c.ID = b.BOX_ID "

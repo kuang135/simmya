@@ -30,7 +30,6 @@ public class DiscussController {
 		StringBuffer requestURL = request.getRequestURL();
 		String servletPath = request.getServletPath();
 		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
-		
 		return discussService.listDiscussByInfoid(infoid, url);
 	}
 	

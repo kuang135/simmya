@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +35,8 @@ public class OrderController {
 	
 	@RequestMapping(value= "/user/orders", method = RequestMethod.GET)
 	@ResponseBody
-	public List<OrderV> listOrders(@RequestHeader(value = "token",required = true)String token) throws SQLException {
+	public List<OrderV> listOrders(@RequestHeader(value = "token",required = true)String token,
+			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return null;
 		}
@@ -41,13 +44,17 @@ public class OrderController {
 		if (loginUser == null) {
 			return null;
 		}
-		return orderService.listOrders(loginUser.getId());
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return orderService.listOrders(loginUser.getId(), url);
 	}
 	
 	@RequestMapping(value= "/user/orderBoxes", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, Object>> listOrders(@RequestHeader(value = "token",required = true)String token,
-			@RequestParam(value = "orderId", required = true)String orderId) throws SQLException {
+			@RequestParam(value = "orderId", required = true)String orderId,
+			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return Collections.emptyList();
 		}
@@ -55,7 +62,10 @@ public class OrderController {
 		if (loginUser == null) {
 			return Collections.emptyList();
 		}
-		return orderService.listOrderBoxes(loginUser.getId(), orderId);
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return orderService.listOrderBoxes(loginUser.getId(), orderId, url);
 	}
 
 	/*
