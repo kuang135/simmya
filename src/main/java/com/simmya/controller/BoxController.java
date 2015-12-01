@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,13 +38,17 @@ public class BoxController {
 	@RequestMapping(value= "/boxs/list", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, Object>> listBox(@RequestParam(value = "start", required = true)String start,
-											 @RequestParam(value = "limit", required = true)String limit) throws SQLException {
+											 @RequestParam(value = "limit", required = true)String limit,
+											 HttpServletRequest request) throws SQLException {
 		int begin = Integer.parseInt(start);
 		int size = Integer.parseInt(limit);
 		if (begin < 1 || size < 0)
 			return Collections.emptyList();
 		int st = begin - 1;
-		return boxService.listBox(st, size);
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return boxService.listBox(st, size, url);
 	}
 	
 	/*
@@ -52,8 +58,12 @@ public class BoxController {
 	 */
 	@RequestMapping(value= "/boxs/id", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> detail(@RequestParam(value = "boxid", required = true)String boxid) throws SQLException {
-		return boxService.detail(boxid);
+	public List<Map<String, Object>> detail(@RequestParam(value = "boxid", required = true)String boxid,
+			HttpServletRequest request) throws SQLException {
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return boxService.detail(boxid, url);
 	}
 	
 	@RequestMapping(value= "/boxs/collect", method = RequestMethod.POST)

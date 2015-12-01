@@ -13,7 +13,7 @@ import com.simmya.vo.OrderV;
 @Repository
 public interface OrdersMapper extends Mapper<Orders> {
    
-	List<OrderV> getOrderListByUserid(@Param("userid")String userid);
+	List<OrderV> getOrderListByUserid(@Param("userid")String userid, @Param("url")String url);
 
 	List<Orders> selectByStatus(@Param("status")String status);
 	

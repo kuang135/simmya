@@ -156,14 +156,10 @@ public class UserController {
 		if (loginUser == null) {
 			return Collections.emptyMap();
 		}
-		Map<String, Object> map = userService.getInfo(loginUser.getId());
-		String headPic = (String) map.get("headPic");
-		if (headPic != null) {
-			StringBuffer requestURL = request.getRequestURL();
-			String servletPath = request.getServletPath();
-			String url = StringUtils.substringBefore(requestURL.toString(), servletPath);
-			map.put("headPic", url + "/" + headPic);
-		}
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		Map<String, Object> map = userService.getInfo(loginUser.getId(), url);
 		return map;
 	}
 

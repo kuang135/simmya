@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,14 +31,23 @@ public class InfoController {
 	
 	@RequestMapping(value= "/infos/list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> getTop10InfoOfClickcount(@RequestParam(value = "limit", required = true)String limit) throws SQLException {
-		return infoService.getTop10(limit);
+	public List<Map<String, Object>> getTop10InfoOfClickcount(@RequestParam(value = "limit", required = true)String limit,
+			HttpServletRequest request) throws SQLException {
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		List<Map<String, Object>> list = infoService.getTop10(limit, url);
+		return list;
 	}
 	
 	@RequestMapping(value= "/infos/id", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getDetailById(@RequestParam(value = "infoid", required = true)String infoid) throws SQLException {
-		return infoService.getDetailById(infoid);
+	public Map<String, Object> getDetailById(@RequestParam(value = "infoid", required = true)String infoid,
+			HttpServletRequest request) throws SQLException {
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return infoService.getDetailById(infoid, url);
 	}
 	
 	@RequestMapping(value= "/infos/agree", method = RequestMethod.POST)

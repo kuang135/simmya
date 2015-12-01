@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +34,8 @@ public class CollectController {
 	
 	@RequestMapping(value= "/user/collectionInfo", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> listCollectedInfo(@RequestHeader(value = "token",required = true)String token) throws SQLException {
+	public List<Map<String, Object>> listCollectedInfo(@RequestHeader(value = "token",required = true)String token,
+			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return Collections.emptyList();
 		}
@@ -40,12 +43,16 @@ public class CollectController {
 		if (loginUser == null) {
 			return Collections.emptyList();
 		}
-		return infoCollectService.list(loginUser.getId());
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return infoCollectService.list(loginUser.getId(), url);
 	}
 	
 	@RequestMapping(value= "/user/collectionBox", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> listCollectedBox(@RequestHeader(value = "token",required = true)String token) throws SQLException {
+	public List<Map<String, Object>> listCollectedBox(@RequestHeader(value = "token",required = true)String token,
+			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return Collections.emptyList();
 		}
@@ -53,7 +60,10 @@ public class CollectController {
 		if (loginUser == null) {
 			return Collections.emptyList();
 		}
-		return boxCollectService.list(loginUser.getId());
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return boxCollectService.list(loginUser.getId(), url);
 	}
 	
 	

@@ -47,19 +47,29 @@ public class InfoService extends BaseService<Info>{
 	@Autowired
 	private BoxInfoRefMapper boxInfoMapper;
 	
-	public List<Map<String, Object>> getTop10(String limit) throws SQLException {
-		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,COLLECT_COUNT collectCount,"
-					+ " AGREE_COUNT agreeCount, DISCUSS_COUNT discussCount,IMAGE_ADDRESS imageAddress,"
-					+ " SHARE_COUNT shareCount,SOURCE source,CLICK_COUNT clickCount"
-					+ " FROM info ORDER BY click_count DESC LIMIT ?";
+	public List<Map<String, Object>> getTop10(String limit, String url) throws SQLException {
+		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail, "
+				+ " CASE WHEN COLLECT_COUNT IS NULL THEN 0 ELSE COLLECT_COUNT END collectCount,"
+				+ " CASE WHEN AGREE_COUNT IS NULL THEN 0 ELSE AGREE_COUNT END agreeCount, "
+				+ " CASE WHEN DISCUSS_COUNT IS NULL THEN 0 ELSE DISCUSS_COUNT END discussCount,"
+				+ " CASE WHEN SHARE_COUNT IS NULL THEN 0 ELSE SHARE_COUNT END shareCount,"
+				+ " CASE WHEN CLICK_COUNT IS NULL THEN 0 ELSE CLICK_COUNT END clickCount,"
+				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " SOURCE source "
+				+ " FROM info ORDER BY click_count DESC LIMIT ?";
 		List<Map<String,Object>> mapList = DbUtil.getMapList(sql, Integer.parseInt(limit));
 		return mapList;
 	}
 
-	public Map<String, Object> getDetailById(String infoid) throws SQLException {
-		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,COLLECT_COUNT collectCount,"
-				+ " AGREE_COUNT agreeCount, DISCUSS_COUNT discussCount,IMAGE_ADDRESS imageAddress,"
-				+ " SHARE_COUNT shareCount,SOURCE source,CLICK_COUNT clickCount"
+	public Map<String, Object> getDetailById(String infoid, String url) throws SQLException {
+		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
+				+ " CASE WHEN COLLECT_COUNT IS NULL THEN 0 ELSE COLLECT_COUNT END collectCount,"
+				+ " CASE WHEN AGREE_COUNT IS NULL THEN 0 ELSE AGREE_COUNT END agreeCount, "
+				+ " CASE WHEN DISCUSS_COUNT IS NULL THEN 0 ELSE DISCUSS_COUNT END discussCount,"
+				+ " CASE WHEN SHARE_COUNT IS NULL THEN 0 ELSE SHARE_COUNT END shareCount,"
+				+ " CASE WHEN CLICK_COUNT IS NULL THEN 0 ELSE CLICK_COUNT END clickCount,"
+				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " SOURCE source"
 				+ " FROM info where ID = ?";
 		Map<String, Object> map = DbUtil.getMap(sql, infoid);
 		return map;

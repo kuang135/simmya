@@ -16,7 +16,8 @@ public class DiscussService extends BaseService<Discuss>{
 	
 	
 	public List<Map<String, Object>> listDiscussByInfoid(String infoid, String urlPrefix) throws SQLException {
-		String sql = "select u.nickname nickName,CONCAT('" + urlPrefix + "',u.head_pic) headPic,d.content content,"
+		String sql = "select u.nickname nickName,d.content content, "
+				+ " CONCAT('" + urlPrefix + "',CASE WHEN u.head_pic IS NOT NULL THEN REPLACE(u.head_pic,'\\\\','/') END) headPic, "
 				+ " DATE_FORMAT(d.create_time,'%Y-%m-%d %H:%i:%s') time "
 				+ " FROM discuss d "
 				+ " LEFT JOIN USER u ON d.user_id = u.id "

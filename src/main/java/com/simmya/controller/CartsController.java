@@ -1,9 +1,12 @@
 package com.simmya.controller;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +35,8 @@ public class CartsController {
 	@RequestMapping(value= "/boxs/order", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> addToCart(@RequestHeader(value = "token",required = true)String token,
-			@RequestParam(value = "boxid", required = true)String boxid) {
+			@RequestParam(value = "boxid", required = true)String boxid,
+			@RequestParam(value = "price", required = true)String price) {
 		if (StringUtils.isBlank(token)) {
 			return ReturnMap.BLANK;
 		}
@@ -40,12 +44,13 @@ public class CartsController {
 		if (loginUser == null) {
 			return ReturnMap.FAULT;
 		}
-		return cartsService.addToCart(loginUser.getId(), boxid);
+		return cartsService.addToCart(loginUser.getId(), boxid, new BigDecimal(price));
 	}
 	
 	@RequestMapping(value= "/boxs/cart", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> listCart(@RequestHeader(value = "token",required = true)String token) throws SQLException {
+	public List<Map<String, Object>> listCart(@RequestHeader(value = "token",required = true)String token,
+			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return Collections.emptyList();
 		}
@@ -53,7 +58,10 @@ public class CartsController {
 		if (loginUser == null) {
 			return Collections.emptyList();
 		}
-		return cartsService.listCarts(loginUser.getId());
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		return cartsService.listCarts(loginUser.getId(), url);
 	}
 	
 	@RequestMapping(value= "/boxs/cart/boxDel", method = RequestMethod.POST)

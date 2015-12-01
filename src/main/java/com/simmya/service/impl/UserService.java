@@ -71,9 +71,10 @@ public class UserService extends BaseService<User>{
 	 * 'zodiac':'虎'，‘profession’:‘计算机应用’,
 	 * 'headPic':'www.simmay.com/head.pic'}
 	 */
-	public Map<String, Object> getInfo(String id) throws SQLException {
+	public Map<String, Object> getInfo(String id, String url) throws SQLException {
 		String sql = "SELECT a.NICKNAME nickName,a.GENDER gender,DATE_FORMAT(a.BIRTH,'%Y%m%d') birth, "
-				+ " a.ZODIAC zodiac,a.PROFESSION profession,a.HEAD_PIC headPic "
+				+ " a.ZODIAC zodiac,a.PROFESSION profession,"
+				+ " CONCAT('" + url + "',CASE WHEN a.HEAD_PIC IS NOT NULL THEN REPLACE(a.HEAD_PIC,'\\\\','/') END) headPic "
 				+ " FROM USER a "
 				+ " WHERE a.ID = ?";
 		return DbUtil.getMap(sql, id);
