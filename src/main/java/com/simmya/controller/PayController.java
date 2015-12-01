@@ -57,6 +57,8 @@ public class PayController {
 			map.put("code", "error");
 			map.put("desc", null);
 		}
+		map.put("code", "error");
+		map.put("desc", null);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			OrdersCommit orders=mapper.readValue(jsons, OrdersCommit.class);
