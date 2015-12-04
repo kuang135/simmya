@@ -24,6 +24,8 @@ public class PayService extends BaseService<OrderBoxRef> {
 
 	@Autowired
 	private PayMapper payMapper;
+	@Autowired
+	private CartsService cartsService;
 
 	@Transactional(rollbackFor = Exception.class)
 	public Orders saveOrderRef(OrdersCommit order, User loginUser) {
@@ -45,7 +47,9 @@ public class PayService extends BaseService<OrderBoxRef> {
 			boxRef.setOrderWay(box.getOrderWay());
 			boxRef.setStatus(BoxStatus.NotCompleted);
 			super.save(boxRef);
+			cartsService.deleteCarts(loginUser.getId(), boxRef.getBoxId());
 		}
+		
 		return order_;
 	}
 	
