@@ -54,6 +54,31 @@ public class BoxService extends BaseService<Box>{
 				+ "	from box limit ?,?";
 		return DbUtil.getMapList(sql, start, size);
 	}
+	
+	public List<Map<String, Object>> getInfoListByToken(String userid, int start, int size, String url) throws SQLException {
+		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
+				+ " BOX_PRICE boxPrice, "
+				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " COALESCE(SHARE_COUNT,0) shareCount, "
+				+ " COALESCE(COLLECT_COUNT,0) collectCount, "
+				+ " COALESCE(DISCUSS_COUNT,0) discussCount "
+				+ "	from box limit ?,?";
+		List<Map<String,Object>> mapList = DbUtil.getMapList(sql, start, size);
+		if (mapList != null && mapList.size() > 0) {
+			for (Map<String, Object> map : mapList) {
+				BoxCollection bc = new BoxCollection();
+				bc.setBoxId((String)map.get("id"));
+				bc.setUserId(userid);
+				BoxCollection selectOne = boxCollectionMapper.selectOne(bc);
+				if (selectOne == null) {
+					map.put("collected", false);
+				} else {
+					map.put("collected", true);
+				}
+			}
+		}
+		return mapList;
+	}
 
 	public List<Map<String, Object>> detail(String boxid, String url) throws SQLException {
 		String sql = "select ID id,NAME NAME,TITLE TITLE,DETAIL detail,"

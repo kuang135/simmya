@@ -37,9 +37,11 @@ public class BoxController {
 	 */
 	@RequestMapping(value= "/boxs/list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> listBox(@RequestParam(value = "start", required = true)String start,
-											 @RequestParam(value = "limit", required = true)String limit,
-											 HttpServletRequest request) throws SQLException {
+	public List<Map<String, Object>> listBox(
+				@RequestHeader(value = "token",required = false)String token,
+				@RequestParam(value = "start", required = true)String start,
+				@RequestParam(value = "limit", required = true)String limit,
+				HttpServletRequest request) throws SQLException {
 		int begin = Integer.parseInt(start);
 		int size = Integer.parseInt(limit);
 		if (begin < 1 || size < 0)
@@ -48,7 +50,15 @@ public class BoxController {
 		StringBuffer requestURL = request.getRequestURL();
 		String servletPath = request.getServletPath();
 		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
-		return boxService.listBox(st, size, url);
+		if (StringUtils.isBlank(token)) {
+			return boxService.listBox(st, size, url);
+		} else {
+			User loginUser = userService.checkLogin(token);
+			if (loginUser == null) {
+				return Collections.emptyList();
+			}
+			return boxService.getInfoListByToken(loginUser.getId(), st, size, url);
+		}
 	}
 	
 	/*
@@ -98,8 +108,8 @@ public class BoxController {
 	 * /user/box/discussAdd
 	 */
 	
-	@RequestMapping(value= "/user/box/discussAdd", method = RequestMethod.POST)
-	@ResponseBody
+	/*@RequestMapping(value= "/user/box/discussAdd", method = RequestMethod.POST)
+	@ResponseBody*/
 	public Map<String, Object> doDiscuss(@RequestHeader(value = "token",required = true)String token,
 										 @RequestParam(value = "boxId", required = true)String boxId,
 										 @RequestParam(value = "content", required = true)String content

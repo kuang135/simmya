@@ -16,14 +16,20 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.simmya.constant.BoxStatus;
 import com.simmya.constant.OrderStatus;
+import com.simmya.constant.SendStatus;
 import com.simmya.easyui.DataGrid;
+import com.simmya.exception.SimmyaException;
 import com.simmya.mapper.BackBoxMapper;
 import com.simmya.mapper.BackOrderMapper;
+import com.simmya.mapper.BoxMapper;
 import com.simmya.mapper.OrderBoxRefMapper;
+import com.simmya.mapper.OrderSendMapper;
 import com.simmya.mapper.OrdersMapper;
 import com.simmya.pojo.BackBox;
 import com.simmya.pojo.BackOrder;
+import com.simmya.pojo.Box;
 import com.simmya.pojo.OrderBoxRef;
+import com.simmya.pojo.OrderSend;
 import com.simmya.pojo.Orders;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
@@ -40,7 +46,10 @@ public class OrdersService extends BaseService<Orders>{
 	private OrderBoxRefMapper orderBoxRefMapper;
 	@Autowired
 	private BackBoxMapper backBoxMapper;
-	
+	@Autowired
+	private OrderSendMapper orderSendMapper;
+	@Autowired
+	private BoxMapper boxMapper;
 
 	/*
 	 * [{'id':'134sdrgtwe43','createTime':'20150805 10:10:10',‘address’:'嘉兴桐乡',
@@ -167,6 +176,86 @@ public class OrdersService extends BaseService<Orders>{
         	datagrid.setRows(list);
         }
         return datagrid;
+	}
+
+
+
+	@Transactional
+	public Map<String, Object> receiveOrderBox(String id, String orderid, String boxid, int count) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			OrderBoxRef orderBoxRef = new OrderBoxRef();
+			orderBoxRef.setOrderId(orderid);
+			orderBoxRef.setBoxId(boxid);
+			OrderBoxRef selectOne = orderBoxRefMapper.selectOne(orderBoxRef);
+			if (selectOne != null) {
+				selectOne.setSendStatus(SendStatus.Received);
+				selectOne.setUpdateTime(new Date());
+				orderBoxRefMapper.updateByPrimaryKeySelective(selectOne);
+			} else {
+				throw new SimmyaException(" -- 记录缺失 -- ");
+			}
+			
+			OrderSend orderSend = new OrderSend();
+			orderSend.setOrderId(orderid);
+			orderSend.setBoxId(boxid);
+			orderSend.setCount(count);
+			OrderSend selectOne2 = orderSendMapper.selectOne(orderSend);
+			if (selectOne2 != null) {
+				selectOne2.setReceived(true);
+				orderSendMapper.updateByPrimaryKeySelective(selectOne2);
+			} else {
+				throw new SimmyaException(" -- 记录缺失 -- ");
+			}
+			
+			map.put("code", "success");
+		} catch (Exception e) {
+			map.put("code", "error");
+		}
+		return map;
+	}
+
+
+
+	@Transactional
+	public Map<String, Object> discussOrderBox(String id, String orderid, String boxid, int count, String discuss) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			OrderBoxRef orderBoxRef = new OrderBoxRef();
+			orderBoxRef.setOrderId(orderid);
+			orderBoxRef.setBoxId(boxid);
+			OrderBoxRef selectOne = orderBoxRefMapper.selectOne(orderBoxRef);
+			if (selectOne != null) {
+				selectOne.setSendStatus(SendStatus.Evaluated);
+				selectOne.setUpdateTime(new Date());
+				orderBoxRefMapper.updateByPrimaryKeySelective(selectOne);
+			} else {
+				throw new SimmyaException(" -- 记录缺失 -- ");
+			}
+			
+			OrderSend orderSend = new OrderSend();
+			orderSend.setOrderId(orderid);
+			orderSend.setBoxId(boxid);
+			orderSend.setCount(count);
+			OrderSend selectOne2 = orderSendMapper.selectOne(orderSend);
+			if (selectOne2 != null) {
+				selectOne2.setDiscuss(discuss);
+				orderSendMapper.updateByPrimaryKeySelective(selectOne2);
+			} else {
+				throw new SimmyaException(" -- 记录缺失 -- ");
+			}
+			Box box = boxMapper.selectByPrimaryKey(boxid);
+			if (box != null) {
+				box.setDiscussCount(box.getDiscussCount() + 1); 
+				boxMapper.updateByPrimaryKeySelective(box);
+			} else {
+				throw new SimmyaException(" -- 记录缺失 -- ");
+			}
+			map.put("code", "success");
+		} catch (Exception e) {
+			map.put("code", "error");
+		}
+		return map;
 	}
 
 }

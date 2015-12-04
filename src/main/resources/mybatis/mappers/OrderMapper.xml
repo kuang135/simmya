@@ -21,15 +21,17 @@
 		b.ORDER_WAY orderWay,
 		CONCAT('${url}',CASE WHEN c.IMAGE_ADDRESS IS NOT NULL THEN REPLACE(c.IMAGE_ADDRESS,'\\','/') END) imageAddress,
 		COALESCE(b.ORDER_COUNT,0) orderCount,
-		COALESCE(b.SEND_COUNT,0) sendCount
+		COALESCE(b.SEND_COUNT,0) sendCount,
+		b.status boxStatus,
+		b.send_status sendStatus
 		FROM orders a
 		LEFT JOIN ORDER_BOX_REF b ON a.ID = b.ORDER_ID
 		LEFT JOIN BOX c ON c.ID = b.BOX_ID
 		LEFT JOIN ADDRESS d ON a.ADDRESS_ID = d.ID
 		LEFT JOIN USER e on a.user_id = e.id
-		WHERE a.USER_ID = #{userid}
+		WHERE a.USER_ID = #{userid} AND a.STATUS = '已付款'
 		<if test="status != null ">
-	         AND a.STATUS = #{status}
+	         AND b.SEND_STATUS = #{status}
 	    </if>
 	</select>
 	
