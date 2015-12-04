@@ -3,8 +3,11 @@ package com.simmya.controller;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simmya.alipay.config.AlipayConfig;
 import com.simmya.alipay.sign.RSA;
 import com.simmya.alipay.util.AlipayCore;
+import com.simmya.alipay.util.AlipayNotify;
 import com.simmya.constant.OrderStatus;
 import com.simmya.pojo.Orders;
 import com.simmya.pojo.OrdersCommit;
@@ -27,6 +31,7 @@ import com.simmya.service.impl.OrdersService;
 import com.simmya.service.impl.PayService;
 import com.simmya.service.impl.UserService;
 import com.simmya.vo.OrderV;
+
 
 
 @Controller
@@ -102,14 +107,44 @@ public class PayController {
 	
 	@RequestMapping(value= "/boxs/backZFB", method = RequestMethod.POST)
 	@ResponseBody
-	public String backZFB(@RequestParam(value = "out_trade_no", required = true)String out_trade_no) throws SQLException, UnsupportedEncodingException {
+	public String backZFB(HttpServletRequest request) throws SQLException, UnsupportedEncodingException {
 		String returnString="error";
-		String out_trade_no_ = new String(out_trade_no.getBytes("ISO-8859-1"),"UTF-8");
-		Orders order=ordersService.selectByPrimaryKey(out_trade_no_);
-		if(order!=null){
-			order.setStatus(OrderStatus.Payed);
-			ordersService.update(order);
-			returnString = "success";
+		Map<String,String> params = new HashMap<String,String>();
+		Map requestParams = request.getParameterMap();
+		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			//乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+			//valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
+			params.put(name, valueStr);
+		}
+		
+		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+		//商户订单号
+
+		String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+
+		//支付宝交易号
+
+		//String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
+
+		//交易状态
+		//String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+
+		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
+
+		if(AlipayNotify.verify(params)){//验证成功
+			Orders order=ordersService.selectByPrimaryKey(out_trade_no);
+			if(order!=null){
+				order.setStatus(OrderStatus.Payed);
+				ordersService.update(order);
+				returnString = "success";
+			}
 		}
 		return returnString;
 	}
