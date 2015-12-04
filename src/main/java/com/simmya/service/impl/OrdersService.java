@@ -48,10 +48,11 @@ public class OrdersService extends BaseService<Orders>{
 	 * 			'detail':'手工烧麦',imageAddress':'接口前缀+/image1.pig',
 	 * 			'price':'100','orderWay':'一周一次'，‘orderCount（订阅期限）’：‘5’,‘sendCount(已发期数)’:'3'}]
 	 */
-	public List<OrderV> listOrders(String id, String url) throws SQLException {
-		List<OrderV> list = orderMapper.getOrderListByUserid(id, url);
+	public List<OrderV> listOrders(String id, String url, String status) throws SQLException {
+		List<OrderV> list = orderMapper.getOrderListByUserid(id, url, status);
 		return list;
 	}
+	
 
 
 	/*

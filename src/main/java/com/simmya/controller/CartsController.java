@@ -1,8 +1,9 @@
 package com.simmya.controller;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.simmya.constant.ReturnMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.simmya.pojo.Carts;
 import com.simmya.pojo.User;
 import com.simmya.service.impl.CartsService;
 import com.simmya.service.impl.UserService;
@@ -32,22 +35,27 @@ public class CartsController {
 	private CartsService cartsService;
 	
 	
-	@RequestMapping(value= "/boxs/order", method = RequestMethod.GET)
+	@RequestMapping(value= "/carts/add", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> addToCart(@RequestHeader(value = "token",required = true)String token,
-			@RequestParam(value = "boxid", required = true)String boxid,
-			@RequestParam(value = "price", required = true)String price) {
+			@RequestParam(value = "carts", required = true)String carts) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtils.isBlank(token)) {
-			return ReturnMap.BLANK;
+			map.put("code", "error");
+			return map;
 		}
 		User loginUser = userService.checkLogin(token);
 		if (loginUser == null) {
-			return ReturnMap.FAULT;
+			map.put("code", "error");
+			return map;
 		}
-		return cartsService.addToCart(loginUser.getId(), boxid, new BigDecimal(price));
+		ObjectMapper mapper = new ObjectMapper();
+		CollectionType collectionType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Carts.class);
+		List<Carts> list = mapper.readValue(carts, collectionType);
+		return cartsService.addToCart(loginUser.getId(), list);
 	}
 	
-	@RequestMapping(value= "/boxs/cart", method = RequestMethod.GET)
+	@RequestMapping(value= "/carts/list", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Map<String, Object>> listCart(@RequestHeader(value = "token",required = true)String token,
 			HttpServletRequest request) throws SQLException {
@@ -64,17 +72,24 @@ public class CartsController {
 		return cartsService.listCarts(loginUser.getId(), url);
 	}
 	
-	@RequestMapping(value= "/boxs/cart/boxDel", method = RequestMethod.POST)
+	/*
+	 * 从购物车中移除一个盒子
+	 */
+	@RequestMapping(value= "/carts/delete", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> deleteCart(@RequestHeader(value = "token",required = true)String token,
-			 @RequestParam(value = "boxid", required = true)String boxid) {
+			 @RequestParam(value = "cartIds", required = true)String cartIds) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (StringUtils.isBlank(token)) {
-			return ReturnMap.BLANK;
+			map.put("code", "error");
+			return map;
 		}
 		User loginUser = userService.checkLogin(token);
 		if (loginUser == null) {
-			return ReturnMap.FAULT;
+			map.put("code", "error");
+			return map;
 		}
-		return cartsService.deleteCarts(loginUser.getId(), boxid);
+		return cartsService.deleteCarts(loginUser.getId(), cartIds);
 	}
+	
 }

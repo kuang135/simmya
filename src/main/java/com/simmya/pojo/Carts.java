@@ -12,9 +12,14 @@ public class Carts {
 
     private String userId;
 
-    private String boxIds;
+    private String boxId;
     
     private BigDecimal boxPrice;
+    
+    private Integer orderCount;
+    private String orderWay;
+    private BigDecimal balance;
+    private BigDecimal totalPrice;
     
     
 
@@ -42,11 +47,45 @@ public class Carts {
         this.userId = userId == null ? null : userId.trim();
     }
 
-    public String getBoxIds() {
-        return boxIds;
-    }
+    public String getBoxId() {
+		return boxId;
+	}
 
-    public void setBoxIds(String boxIds) {
-        this.boxIds = boxIds == null ? null : boxIds.trim();
-    }
+	public void setBoxId(String boxId) {
+		this.boxId = boxId;
+	}
+
+	public Integer getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount = orderCount;
+	}
+
+	public String getOrderWay() {
+		return orderWay;
+	}
+
+	public void setOrderWay(String orderWay) {
+		this.orderWay = orderWay;
+	}
+
+	public BigDecimal getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BigDecimal balance) {
+		this.balance = balance;
+	}
+
+	public BigDecimal getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(BigDecimal totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	
+
 }

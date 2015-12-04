@@ -33,9 +33,10 @@ public class OrderController {
 	
 	
 	
-	@RequestMapping(value= "/user/orders", method = RequestMethod.GET)
+	@RequestMapping(value= "/user/orders", method = RequestMethod.POST)
 	@ResponseBody
-	public List<OrderV> listOrders(@RequestHeader(value = "token",required = true)String token,
+	public List<OrderV> listOrdersByStatus(@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "status",required = false)String status,
 			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return null;
@@ -47,7 +48,7 @@ public class OrderController {
 		StringBuffer requestURL = request.getRequestURL();
 		String servletPath = request.getServletPath();
 		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
-		return orderService.listOrders(loginUser.getId(), url);
+		return orderService.listOrders(loginUser.getId(), url, status);
 	}
 	
 	@RequestMapping(value= "/user/orderBoxes", method = RequestMethod.GET)
