@@ -45,12 +45,11 @@ public class OrderController {
 			HttpServletRequest request) throws SQLException {
 		try {
 			if (StringUtils.isBlank(token)) {
-				return null;
+				return Collections.emptyList();
 			}
-			LOG.info(" ---- token: " + token + " -- stauts: " + status + " ----  ");
 			User loginUser = userService.checkLogin(token);
 			if (loginUser == null) {
-				return null;
+				return Collections.emptyList();
 			}
 			StringBuffer requestURL = request.getRequestURL();
 			String servletPath = request.getServletPath();
