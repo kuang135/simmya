@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.simmya.constant.BoxStatus;
 import com.simmya.constant.OrderStatus;
+import com.simmya.constant.SendStatus;
 import com.simmya.mapper.PayMapper;
 import com.simmya.pojo.BoxCommit;
 import com.simmya.pojo.OrderBoxRef;
@@ -46,6 +47,7 @@ public class PayService extends BaseService<OrderBoxRef> {
 			boxRef.setOrderId(order_.getId());
 			boxRef.setOrderWay(box.getOrderWay());
 			boxRef.setStatus(BoxStatus.NotCompleted);
+			boxRef.setSendStatus(SendStatus.NoSended);
 			super.save(boxRef);
 			cartsService.deleteCarts(loginUser.getId(), boxRef.getBoxId());
 		}
