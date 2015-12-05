@@ -29,7 +29,7 @@
 		LEFT JOIN BOX c ON c.ID = b.BOX_ID
 		LEFT JOIN ADDRESS d ON a.ADDRESS_ID = d.ID
 		LEFT JOIN USER e on a.user_id = e.id
-		WHERE a.USER_ID = #{userid} AND a.STATUS = '已付款'
+		WHERE a.USER_ID = #{userid}
 		<if test="status != null ">
 	         AND b.SEND_STATUS = #{status}
 	    </if>
