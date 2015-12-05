@@ -117,7 +117,7 @@ public class BoxService extends BaseService<Box>{
 		boxCollectionMapper.insert(boxCollection);
 		box.setCollectCount(box.getCollectCount() + 1); 
 		super.updateSelective(box);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		map.put("desc", "成功");
 		return map;
 	}
@@ -135,7 +135,7 @@ public class BoxService extends BaseService<Box>{
 		}
 		box.setShareCount(box.getShareCount() + 1); 
 		super.updateSelective(box);
-		map.put("desc", "sucess");
+		map.put("desc", "success");
 		return map;
 	}
 
@@ -160,7 +160,7 @@ public class BoxService extends BaseService<Box>{
 		boxDiscussMapper.insert(boxDiscuss);
 		box.setDiscussCount(box.getDiscussCount() + 1); 
 		super.updateSelective(box);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		map.put("desc", "成功");
 		return map;
 	}

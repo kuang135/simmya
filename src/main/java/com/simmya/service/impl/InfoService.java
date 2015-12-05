@@ -143,8 +143,8 @@ public class InfoService extends BaseService<Info>{
 		infoAgreeMapper.insert(infoAgree);
 		info.setAgreeCount(info.getAgreeCount() + 1);
 		super.updateSelective(info);
-		//{code:sucess,desc:"成功"} 
-		map.put("code", "sucess");
+		//{code:success,desc:"成功"} 
+		map.put("code", "success");
 		map.put("desc", "成功");
 		return map;
 	}
@@ -178,7 +178,7 @@ public class InfoService extends BaseService<Info>{
 		discussMapper.insert(discuss);
 		info.setDiscussCount(info.getDiscussCount() + 1); 
 		super.updateSelective(info);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		map.put("desc", "成功");
 		return map;
 	}
@@ -209,7 +209,7 @@ public class InfoService extends BaseService<Info>{
 		infoCollectionMapper.insert(infoCollection);
 		info.setCollectCount(info.getCollectCount() + 1); 
 		super.updateSelective(info);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		map.put("desc", "成功");
 		return map;
 	}
@@ -239,7 +239,7 @@ public class InfoService extends BaseService<Info>{
 		shareMapper.insert(share);
 		info.setShareCount(info.getShareCount() + 1);
 		super.updateSelective(info);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		return map;
 	}
 

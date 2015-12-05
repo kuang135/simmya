@@ -19,7 +19,7 @@ public class ReturnMap {
 		FAULT.put("desc", 100002);
 		
 		SUCCESS = new HashMap<String, Object>();
-		SUCCESS.put("code", "sucess");
+		SUCCESS.put("code", "success");
 		SUCCESS.put("desc", "成功");
 	}
 	

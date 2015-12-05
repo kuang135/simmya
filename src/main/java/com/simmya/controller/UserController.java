@@ -49,8 +49,8 @@ public class UserController {
 			map.put("code", "error");
 			map.put("desc", "用户名或密码错误");
 		} else {
-			//{code:sucess,desc:"成功",token:"1341234123423"}
-			map.put("code", "sucess");
+			//{code:success,desc:"成功",token:"1341234123423"}
+			map.put("code", "success");
 			map.put("desc", "成功");
 		}
 		map.put("token", token);
@@ -88,7 +88,7 @@ public class UserController {
 		user.setPassword(md5DigestAsHex);
 		user.setNickname(nickname);
 		userService.save(user);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		map.put("desc", "成功");
 		return map;
 	}
@@ -112,7 +112,7 @@ public class UserController {
 			String returnString = HttpSender.batchSend(url, account, pswd, mobile, msg, needstatus, product, extno);
 			System.out.println(returnString);
 			codecService.saveCodec(mobile, String.valueOf(randsu));
-			map.put("code", "sucess");
+			map.put("code", "success");
 			map.put("desc", "成功");
 		} catch (Exception e) {
 			map.put("code", "error");
@@ -242,7 +242,7 @@ public class UserController {
 		multipartFile.transferTo(file);
 		loginUser.setHeadPic("pic" + File.separator + "head" + FilePathUtil.createPath() + File.separator + uuid + "." + suffix);
 		userService.updateSelective(loginUser);
-		map.put("code", "sucess");
+		map.put("code", "success");
 		return map;
 	}
 }

@@ -85,7 +85,7 @@ public class PayController {
 			String aliStr=AlipayCore.createLinkString(AlipayCore.paraFilter(sParaTemp));
 			String rsaStr=RSA.sign(aliStr, AlipayConfig.private_key, AlipayConfig.input_charset);
 			String sb=aliStr+"&sign=\""+URLEncoder.encode(rsaStr)+"\"&sign_type=\"RSA\"";
-			map.put("code", "sucess");
+			map.put("code", "success");
 			map.put("desc", sb.toString());
 			
 			
@@ -101,7 +101,7 @@ public class PayController {
 //	@ResponseBody
 //	public Map<String, Object> returnZFB() throws SQLException {
 //		HashMap<String, Object> map = new HashMap<String, Object>();
-//		map.put("code", "sucess");
+//		map.put("code", "success");
 //		return map;
 //	}
 	

@@ -100,7 +100,7 @@ public class UserService extends BaseService<User>{
 		try {
 			int i = super.updateSelective(loginUser);
 			if (i == 1) {
-				map.put("code", "sucess");
+				map.put("code", "success");
 			} else {
 				map.put("code", "error");
 			}

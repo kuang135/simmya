@@ -38,7 +38,7 @@ public class AddressService extends BaseService<Address>{
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			super.saveSelective(addr);
-			map.put("code", "sucess");
+			map.put("code", "success");
 		} catch (Exception e) {
 			map.put("code", "error");
 		}
@@ -49,7 +49,7 @@ public class AddressService extends BaseService<Address>{
 		Map<String, Object> map = new HashMap<String, Object>();
 		int i = super.deleteById(id);
 		if (i == 1) {
-			map.put("code", "sucess");
+			map.put("code", "success");
 		} else {
 			map.put("code", "error");
 		}
@@ -61,7 +61,7 @@ public class AddressService extends BaseService<Address>{
 		try {
 			int i = super.updateSelective(addr);
 			if (i == 1) {
-				map.put("code", "sucess");
+				map.put("code", "success");
 			} else {
 				map.put("code", "error");
 			}
