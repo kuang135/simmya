@@ -17,6 +17,7 @@ import com.github.pagehelper.PageInfo;
 import com.simmya.constant.BoxStatus;
 import com.simmya.constant.OrderStatus;
 import com.simmya.constant.SendStatus;
+import com.simmya.easyui.AjaxResult;
 import com.simmya.easyui.DataGrid;
 import com.simmya.exception.SimmyaException;
 import com.simmya.mapper.BackBoxMapper;
@@ -50,7 +51,6 @@ public class OrdersService extends BaseService<Orders>{
 	private OrderSendMapper orderSendMapper;
 	@Autowired
 	private BoxMapper boxMapper;
-
 	/*
 	 * [{'id':'134sdrgtwe43','createTime':'20150805 10:10:10',‘address’:'嘉兴桐乡',
 	 * 'boxs':[{'id':'2354234srte','name':'烧麦','TITLE':'烧麦好吃',
@@ -151,7 +151,7 @@ public class OrdersService extends BaseService<Orders>{
 
 	public DataGrid getOrderDataGrid(int page, int rows, Orders orders) {
 		PageHelper.startPage(page, rows, "CREATE_TIME DESC");
-		List<Orders> list = orderMapper.selectByStatus(orders.getStatus());
+		List<Orders> list = orderMapper.selectByStatusAndId(orders.getStatus(), orders.getId());
 		PageInfo<Orders> pageInfo=new PageInfo<Orders>(list);
 		DataGrid datagrid=new DataGrid();
         if(list != null) {
@@ -163,8 +163,9 @@ public class OrdersService extends BaseService<Orders>{
 
 
 	public DataGrid getBoxDataGrid(String orderid) throws SQLException {
-		String sql = "SELECT b.NAME name,b.BOX_PRICE boxPrice,a.ORDER_COUNT orderCount,a.ORDER_WAY orderWay,a.STATUS status,"
-				+ " a.SEND_COUNT sendCount,DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTime "
+		String sql = "SELECT a.BOX_ID id,b.NAME name,b.BOX_PRICE boxPrice,a.ORDER_COUNT orderCount,a.ORDER_WAY orderWay,a.STATUS status,"
+				+ " a.SEND_COUNT sendCount,DATE_FORMAT(a.UPDATE_TIME,'%Y-%m-%d %H:%i:%s') updateTime,"
+				+ " a.SEND_STATUS sendStatus "
 				+ " FROM order_box_ref a "
 				+ " LEFT JOIN box b ON a.BOX_ID = b.ID "
 				+ " WHERE a.ORDER_ID = ? "
@@ -190,7 +191,6 @@ public class OrdersService extends BaseService<Orders>{
 			OrderBoxRef selectOne = orderBoxRefMapper.selectOne(orderBoxRef);
 			if (selectOne != null) {
 				selectOne.setSendStatus(SendStatus.Received);
-				selectOne.setUpdateTime(new Date());
 				orderBoxRefMapper.updateByPrimaryKeySelective(selectOne);
 			} else {
 				throw new SimmyaException(" -- 记录缺失 -- ");
@@ -227,7 +227,6 @@ public class OrdersService extends BaseService<Orders>{
 			OrderBoxRef selectOne = orderBoxRefMapper.selectOne(orderBoxRef);
 			if (selectOne != null) {
 				selectOne.setSendStatus(SendStatus.Evaluated);
-				selectOne.setUpdateTime(new Date());
 				orderBoxRefMapper.updateByPrimaryKeySelective(selectOne);
 			} else {
 				throw new SimmyaException(" -- 记录缺失 -- ");
@@ -256,6 +255,51 @@ public class OrdersService extends BaseService<Orders>{
 			map.put("code", "error");
 		}
 		return map;
+	}
+
+
+
+	/*
+	 *  order_box_ref 表更改
+	 *  	count +1, sendStauts 修改， updatetime 修改
+	 *   orders-send 表添加记录
+	 */
+	@Transactional
+	public AjaxResult sendBox(String orderid, String boxid) {
+		OrderBoxRef orderBoxRef = new OrderBoxRef();
+		orderBoxRef.setOrderId(orderid);
+		orderBoxRef.setBoxId(boxid);
+		OrderBoxRef selectOne = orderBoxRefMapper.selectOne(orderBoxRef);
+		Integer sendCount = null;
+		if (selectOne != null) {
+			sendCount = selectOne.getSendCount();
+			if (sendCount == null) {
+				sendCount = 0;
+			}
+			Integer orderCount = selectOne.getOrderCount();
+			if (orderCount == null) {
+				orderCount = 0;
+			}
+			if (sendCount >= orderCount) {
+				return new AjaxResult(400, "该盒子已经全部发送完，不能再发送。");
+			}
+			selectOne.setSendCount(sendCount + 1);
+			selectOne.setSendStatus(SendStatus.Sended);
+			selectOne.setUpdateTime(new Date());
+			orderBoxRefMapper.updateByPrimaryKeySelective(selectOne);
+		} else {
+			return new AjaxResult(400, "发送操作失败。");
+		}
+		if (sendCount != null) {
+			OrderSend orderSend = new OrderSend();
+			orderSend.setOrderId(orderid);
+			orderSend.setBoxId(boxid);
+			orderSend.setReceived(false);
+			orderSend.setCount(sendCount + 1);
+			orderSend.setDiscuss("");
+			orderSendMapper.insertSelective(orderSend);
+		}
+		return new AjaxResult(200, "发送操作成功。");
 	}
 
 }

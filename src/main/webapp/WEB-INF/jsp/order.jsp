@@ -39,6 +39,7 @@
 						    <option value="已完成">已完成</option>
 						    <option value="已退订">已退订</option>
 						</select>
+						&nbsp;订单号：<input id="searchOrderId" class="easyui-textbox" data-options="width:200" />
 						<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="doSearch()">搜索</a>
 	            		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="doRefresh()"></a>
 					</td>
@@ -46,8 +47,11 @@
 			</table>
 	    </div>
 	    
-	    <div id="box-dlg" class="easyui-dialog" style="width:900px;height:95%;" data-options="closed:true">
+	    <div id="box-dlg" class="easyui-dialog" style="width:900px;height:95%;" data-options="closed:true,buttons:'#box-dlg-buttons'">
    		<table id="box-dg" class="easyui-datagrid"></table>
+   		<div id="box-dlg-buttons">
+		<a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-rise'" onclick="doSend()">确认发送</a>
+	</div>
     </div>
 	</body>
 </html>

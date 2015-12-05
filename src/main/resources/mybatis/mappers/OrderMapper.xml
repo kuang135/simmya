@@ -35,7 +35,7 @@
 	    </if>
 	</select>
 	
-	<select id="selectByStatus" resultType="com.simmya.vo.OrderV">
+	<select id="selectByStatusAndId" resultType="com.simmya.vo.OrderV">
 		SELECT a.ID id,DATE_FORMAT(a.CREATE_TIME,'%Y-%m-%d %H:%i:%s') createTime,a.STATUS status,
 		a.TOTAL_PRICE totalPrice,a.BALANCE_PRICE balancePrice,d.ADDRESS_INFO address,
 		d.ZIPCODE zipcode,d.GET_NAME getName,d.PHONE phone
@@ -45,6 +45,9 @@
 	        <if test="status != null ">
 	            a.STATUS = #{status}
 	        </if>
+	        <if test="orderid != null ">
+	         	AND a.id like '%${orderid}%'
+	    </if>
 	     </where>
 	</select>
   

@@ -15,6 +15,6 @@ public interface OrdersMapper extends Mapper<Orders> {
    
 	List<OrderV> getOrderListByUserid(@Param("userid")String userid, @Param("url")String url, @Param("status")String status);
 
-	List<Orders> selectByStatus(@Param("status")String status);
+	List<Orders> selectByStatusAndId(@Param("status")String status, @Param("orderid")String orderid);
 	
 }
