@@ -7,7 +7,7 @@ public class OrderStatus {
 	
 	public static final String NotPayed = "未付款";
 	public static final String Payed = "已付款";
-	public static final String Completed = "已完成";
+	public static final String Completed = "已完成";//全部发送完
 	public static final String Back = "已退订";
 	
 }

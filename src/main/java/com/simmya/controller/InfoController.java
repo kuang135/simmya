@@ -1,6 +1,7 @@
 package com.simmya.controller;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -31,18 +32,30 @@ public class InfoController {
 	
 	@RequestMapping(value= "/infos/list", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Map<String, Object>> getTop10InfoOfClickcount(@RequestParam(value = "limit", required = true)String limit,
+	public List<Map<String, Object>> getInfoList(
+			@RequestHeader(value = "token",required = false)String token,
+			@RequestParam(value = "page", required = true)int page,
+			@RequestParam(value = "size", required = true)int size,
 			HttpServletRequest request) throws SQLException {
 		StringBuffer requestURL = request.getRequestURL();
 		String servletPath = request.getServletPath();
 		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
-		List<Map<String, Object>> list = infoService.getTop10(limit, url);
-		return list;
+		int start = (page-1)*size;
+		if (StringUtils.isBlank(token)) {
+			return infoService.getInfoList(start, size, url);
+		} else {
+			User loginUser = userService.checkLogin(token);
+			if (loginUser == null) {
+				return Collections.emptyList();
+			}
+			return infoService.getInfoListByToken(loginUser.getId(), start, size, url);
+		}
 	}
 	
 	@RequestMapping(value= "/infos/id", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getDetailById(@RequestParam(value = "infoid", required = true)String infoid,
+	public Map<String, Object> getDetailById(
+			@RequestParam(value = "infoid", required = true)String infoid,
 			HttpServletRequest request) throws SQLException {
 		StringBuffer requestURL = request.getRequestURL();
 		String servletPath = request.getServletPath();

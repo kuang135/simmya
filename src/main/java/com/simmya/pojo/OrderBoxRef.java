@@ -14,8 +14,16 @@ public class OrderBoxRef {
 	private Integer orderCount;
 	private String orderWay;
 	private String status;
+	private String sendStatus;
 	private Integer sendCount;
 	private Date updateTime;
+	
+	public String getSendStatus() {
+		return sendStatus;
+	}
+	public void setSendStatus(String sendStatus) {
+		this.sendStatus = sendStatus;
+	}
 	public String getId() {
 		return id;
 	}

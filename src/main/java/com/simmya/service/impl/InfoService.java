@@ -47,8 +47,8 @@ public class InfoService extends BaseService<Info>{
 	@Autowired
 	private BoxInfoRefMapper boxInfoMapper;
 	
-	public List<Map<String, Object>> getTop10(String limit, String url) throws SQLException {
-		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail, "
+	public List<Map<String, Object>> getInfoList(int start, int limit, String url) throws SQLException {
+		String sql = "SELECT ID id,NAME name,TITLE title,DETAIL detail, "
 				+ " CASE WHEN COLLECT_COUNT IS NULL THEN 0 ELSE COLLECT_COUNT END collectCount,"
 				+ " CASE WHEN AGREE_COUNT IS NULL THEN 0 ELSE AGREE_COUNT END agreeCount, "
 				+ " CASE WHEN DISCUSS_COUNT IS NULL THEN 0 ELSE DISCUSS_COUNT END discussCount,"
@@ -56,12 +56,53 @@ public class InfoService extends BaseService<Info>{
 				+ " CASE WHEN CLICK_COUNT IS NULL THEN 0 ELSE CLICK_COUNT END clickCount,"
 				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
 				+ " SOURCE source "
-				+ " FROM info ORDER BY click_count DESC LIMIT ?";
-		List<Map<String,Object>> mapList = DbUtil.getMapList(sql, Integer.parseInt(limit));
+				+ " FROM info ORDER BY click_count DESC LIMIT ?,?";
+		List<Map<String,Object>> mapList = DbUtil.getMapList(sql, start, limit);
 		return mapList;
 	}
+	
+	public List<Map<String, Object>> getInfoListByToken(String userid, int start, int limit, String url) throws SQLException {
+		String sql = "SELECT ID id,NAME name,TITLE title,DETAIL detail, "
+				+ " CASE WHEN COLLECT_COUNT IS NULL THEN 0 ELSE COLLECT_COUNT END collectCount,"
+				+ " CASE WHEN AGREE_COUNT IS NULL THEN 0 ELSE AGREE_COUNT END agreeCount, "
+				+ " CASE WHEN DISCUSS_COUNT IS NULL THEN 0 ELSE DISCUSS_COUNT END discussCount,"
+				+ " CASE WHEN SHARE_COUNT IS NULL THEN 0 ELSE SHARE_COUNT END shareCount,"
+				+ " CASE WHEN CLICK_COUNT IS NULL THEN 0 ELSE CLICK_COUNT END clickCount,"
+				+ " CONCAT('" + url + "',CASE WHEN IMAGE_ADDRESS IS NOT NULL THEN REPLACE(IMAGE_ADDRESS,'\\\\','/') END) imageAddress, "
+				+ " SOURCE source "
+				+ " FROM info ORDER BY click_count DESC LIMIT ?,?";
+		List<Map<String,Object>> mapList = DbUtil.getMapList(sql, start, limit);
+		if (mapList != null && mapList.size() > 0) {
+			for (Map<String, Object> map : mapList) {
+				InfoCollection infoCollect = new InfoCollection();
+				infoCollect.setInfoId((String)map.get("id"));
+				infoCollect.setUserId(userid);
+				InfoCollection selectOne = infoCollectionMapper.selectOne(infoCollect);
+				if (selectOne == null) {
+					map.put("collected", false);
+				} else {
+					map.put("collected", true);
+				}
+				InfoAgree infoAgree = new InfoAgree();
+				infoAgree.setInfoId((String)map.get("id"));
+				infoAgree.setUserId(userid);
+				InfoAgree selectOne2 = infoAgreeMapper.selectOne(infoAgree);
+				if (selectOne2 == null) {
+					map.put("agreed", false);
+				} else {
+					map.put("agreed", true);
+				}
+			}
+		}
+		return mapList;
+	}
+	
 
 	public Map<String, Object> getDetailById(String infoid, String url) throws SQLException {
+		Info info = new Info();
+		info.setClickCount(info.getClickCount() + 1);
+		info.setId(infoid);
+		super.updateSelective(info);
 		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
 				+ " CASE WHEN COLLECT_COUNT IS NULL THEN 0 ELSE COLLECT_COUNT END collectCount,"
 				+ " CASE WHEN AGREE_COUNT IS NULL THEN 0 ELSE AGREE_COUNT END agreeCount, "

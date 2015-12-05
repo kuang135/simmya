@@ -16,8 +16,22 @@ public class BoxV {
 	private String orderWay;
 	private Integer orderCount;
 	private Integer sendCount;
+	private String boxStatus;
+	private String sendStatus;
 	
 	
+	public String getBoxStatus() {
+		return boxStatus;
+	}
+	public void setBoxStatus(String boxStatus) {
+		this.boxStatus = boxStatus;
+	}
+	public String getSendStatus() {
+		return sendStatus;
+	}
+	public void setSendStatus(String sendStatus) {
+		this.sendStatus = sendStatus;
+	}
 	public String getId() {
 		return id;
 	}

@@ -33,9 +33,11 @@ public class OrderController {
 	
 	
 	
-	@RequestMapping(value= "/user/orders", method = RequestMethod.GET)
+	@RequestMapping(value= "/user/orders", method = RequestMethod.POST)
 	@ResponseBody
-	public List<OrderV> listOrders(@RequestHeader(value = "token",required = true)String token,
+	public List<OrderV> listOrdersByStatus(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "status",required = false)String status,
 			HttpServletRequest request) throws SQLException {
 		if (StringUtils.isBlank(token)) {
 			return null;
@@ -47,8 +49,51 @@ public class OrderController {
 		StringBuffer requestURL = request.getRequestURL();
 		String servletPath = request.getServletPath();
 		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
-		return orderService.listOrders(loginUser.getId(), url);
+		return orderService.listOrders(loginUser.getId(), url, status);
 	}
+	
+	@RequestMapping(value= "/orderBox/receive", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> receiveOrderBox(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "orderid",required = true)String orderid,
+			@RequestParam(value = "boxid",required = true)String boxid,
+			@RequestParam(value = "sendCount",required = true)int sendCount) throws SQLException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		return orderService.receiveOrderBox(loginUser.getId(), orderid, boxid, sendCount);
+	}
+	
+	@RequestMapping(value= "/orderBox/discuss", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> discussOrderBox(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "orderid",required = true)String orderid,
+			@RequestParam(value = "boxid",required = true)String boxid,
+			@RequestParam(value = "sendCount",required = true)int sendCount,
+			@RequestParam(value = "discuss",required = true)String discuss) throws SQLException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		return orderService.discussOrderBox(loginUser.getId(), orderid, boxid, sendCount, discuss);
+	}
+	
+	
 	
 	@RequestMapping(value= "/user/orderBoxes", method = RequestMethod.GET)
 	@ResponseBody
