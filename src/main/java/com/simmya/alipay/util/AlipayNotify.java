@@ -42,7 +42,9 @@ public class AlipayNotify {
     	String responseTxt = "false";
 		if(params.get("notify_id") != null) {
 			String notify_id = params.get("notify_id");
+			System.out.println(notify_id );
 			responseTxt = verifyResponse(notify_id);
+			System.out.println(responseTxt);
 		}
 	    String sign = "";
 	    if(params.get("sign") != null) {sign = params.get("sign");}
@@ -74,6 +76,7 @@ public class AlipayNotify {
         boolean isSign = false;
         if(AlipayConfig.sign_type.equals("RSA")){
         	isSign = RSA.verify(preSignStr, sign, AlipayConfig.ali_public_key, AlipayConfig.input_charset);
+        	System.out.println(isSign);
         }
         return isSign;
     }

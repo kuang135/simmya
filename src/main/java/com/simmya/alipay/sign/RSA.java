@@ -4,6 +4,7 @@ package com.simmya.alipay.sign;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -151,23 +152,25 @@ public class RSA{
 		
 		
 		Map<String, String> sParaTemp = new HashMap<String, String>(); 
-		sParaTemp.put("_input_charset", "utf-8");
-		sParaTemp.put("it_b_pay", "30m"); 
-		sParaTemp.put("notify_url", "http://115.159.42.41:6430/boxs/backZFB.do"); 
-		sParaTemp.put("out_trade_no","xxxx"); 
-		sParaTemp.put("partner", "2088511405850083"); 
-		sParaTemp.put("payment_type", "1"); 
+		sParaTemp.put("_input_charset", "\"utf-8\"");
+		sParaTemp.put("it_b_pay", "\"30m\""); 
+		sParaTemp.put("notify_url", "\"http://115.159.42.41:6430/boxs/backZFB.do\""); 
+		sParaTemp.put("out_trade_no", "\""+"asdfasd"+"\""); 
+		sParaTemp.put("partner", "\"2088511405850083\""); 
+		sParaTemp.put("payment_type", "\"1\""); 
 		//sParaTemp.put("return_url", "http://115.159.42.41:6430/boxs/returnZFB.do"); 
-		sParaTemp.put("seller_id", "nuanuan1210@qq.com"); 
-		sParaTemp.put("service", "mobile.securitypay.pay"); 
-		sParaTemp.put("subject", "盒子购买"); 
-		sParaTemp.put("total_fee", String.valueOf(11.3));
+		sParaTemp.put("seller_id", "\"nuanuan1210@qq.com\""); 
+		sParaTemp.put("service", "\"mobile.securitypay.pay\""); 
+		sParaTemp.put("subject", "\"盒子购买\""); 
+		sParaTemp.put("total_fee", "\""+String.valueOf("asdfasdf")+"\"");
 		
 		
 		String aliStr=AlipayCore.createLinkString(AlipayCore.paraFilter(sParaTemp));
 		System.out.println(aliStr);
 		String rsaStr=RSA.sign(aliStr, AlipayConfig.private_key, AlipayConfig.input_charset);
-		System.out.println(rsaStr);
+		
+		String sb=aliStr+"&sign=\""+URLEncoder.encode(rsaStr)+"\"&sign_type=\"RSA\"";
+		System.out.println(sb);
 		boolean xx=verify(aliStr,rsaStr,AlipayConfig.ali_public_key,AlipayConfig.input_charset);
 		System.out.println(String.valueOf(xx));
 	}

@@ -1,6 +1,7 @@
 package com.simmya.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -69,21 +70,21 @@ public class PayController {
 			OrdersCommit orders=mapper.readValue(jsons, OrdersCommit.class);
 			Orders orderx=payService.saveOrderRef(orders,loginUser);
 			Map<String, String> sParaTemp = new HashMap<String, String>(); 
-			sParaTemp.put("_input_charset", "utf-8");
-			sParaTemp.put("it_b_pay", "30m"); 
-			sParaTemp.put("notify_url", "http://115.159.42.41:6430/boxs/backZFB.do"); 
-			sParaTemp.put("out_trade_no", orderx.getId()); 
-			sParaTemp.put("partner", "2088511405850083"); 
-			sParaTemp.put("payment_type", "1"); 
+			sParaTemp.put("_input_charset", "\"utf-8\"");
+			sParaTemp.put("it_b_pay", "\"30m\""); 
+			sParaTemp.put("notify_url", "\"http://115.159.42.41:6430/boxs/backZFB.do\""); 
+			sParaTemp.put("out_trade_no", "\""+orderx.getId()+"\""); 
+			sParaTemp.put("partner", "\"2088511405850083\""); 
+			sParaTemp.put("payment_type", "\"1\""); 
 			//sParaTemp.put("return_url", "http://115.159.42.41:6430/boxs/returnZFB.do"); 
-			sParaTemp.put("seller_id", "nuanuan1210@qq.com"); 
-			sParaTemp.put("service", "mobile.securitypay.pay"); 
-			sParaTemp.put("subject", "盒子购买"); 
-			sParaTemp.put("total_fee", String.valueOf(orderx.getTotalPrice()));
+			sParaTemp.put("seller_id", "\"nuanuan1210@qq.com\""); 
+			sParaTemp.put("service", "\"mobile.securitypay.pay\""); 
+			sParaTemp.put("subject", "\"盒子购买\""); 
+			sParaTemp.put("total_fee", "\""+String.valueOf(orderx.getTotalPrice())+"\"");
 
 			String aliStr=AlipayCore.createLinkString(AlipayCore.paraFilter(sParaTemp));
 			String rsaStr=RSA.sign(aliStr, AlipayConfig.private_key, AlipayConfig.input_charset);
-			String sb=aliStr+"&sign="+rsaStr+"&sign_type=RSA";
+			String sb=aliStr+"&sign=\""+URLEncoder.encode(rsaStr)+"\"&sign_type=\"RSA\"";
 			map.put("code", "sucess");
 			map.put("desc", sb.toString());
 			
@@ -108,6 +109,7 @@ public class PayController {
 	@RequestMapping(value= "/boxs/backZFB", method = RequestMethod.POST)
 	@ResponseBody
 	public String backZFB(HttpServletRequest request) throws SQLException, UnsupportedEncodingException {
+		System.out.println("进入回调");
 		String returnString="error";
 		Map<String,String> params = new HashMap<String,String>();
 		Map requestParams = request.getParameterMap();
@@ -139,13 +141,16 @@ public class PayController {
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
 
 		if(AlipayNotify.verify(params)){//验证成功
+			System.out.println("验证成功");
 			Orders order=ordersService.selectByPrimaryKey(out_trade_no);
 			if(order!=null){
+				System.out.println("数据操作");
 				order.setStatus(OrderStatus.Payed);
 				ordersService.update(order);
 				returnString = "success";
 			}
 		}
+		System.out.println("结束验证");
 		return returnString;
 	}
 	

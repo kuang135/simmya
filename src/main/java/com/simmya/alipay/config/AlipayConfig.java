@@ -25,7 +25,7 @@ public class AlipayConfig {
 	
 	//↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 	// 合作身份者ID，以2088开头由16位纯数字组成的字符串
-	public static String partner = "";
+	public static String partner = "2088511405850083";
 	// 商户的私钥
 	public static String private_key = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMaz8RcAIrRA2hO1yE514pxM4gf/LFfVou7ZuGc1MO4X1kxWf6UzeNFqKHEUTu2ACxWwQFIl+TM9tWBddSFPoT966a2x1U8tf2IaexiN8IvSAo6qb/9YUNOH1g8bHCoBeBVd6c3K5nHfVhpCwnUlhcuwePKCZJG5plvkVXVGmNdBAgMBAAECgYEAhVmRfMwcfjffosamTPGUSSzXrGI1kiTPmdgHh0wNMFxS9xw9wdKPTIsf5POqHH2H8uA76mWNnjPVm3xc9SQJo+4jhsneepyxWi0LrPec38i2kUn380uygbebV91cLJB8Z5ZFbRCnsf9SPiFc24CHeVlr12O6PZHdqtvmNq0OBaECQQD6lksXjR9TsL3wkfgD+qpX1Z6zIGx0MwzuQloST4Ysi916qYcoNhqb4FgpfilVHROTMiB1SOvTPB3sjl8N+v91AkEAyv68tWAJaqhuFp9GlhRuO4VdBFpzbVrNTfYxtOzCHjufO9KP6nmooQqmwYiT9S19ZyfrlSvwJYOsd8zwXlRrHQJAWzop/ln3JK28iH9rrm8sYqu3ifjs4uTO+VKYnf/rlf4ZVJWxSddgmozzK6/tdjoOrVDbdjdk+1LwhfVS77EIHQJAJNWcgHzwuH3fnBNCx7DlX7+PZV7UWx+C6Yam9mGPx9ShzEUlADMbOj2ojK2vy2l5u+IuiV7zsJr4DLUPWM6QsQJBAI42yoSG+pzonVbBiFrhVqqt2duJWXPGn5LamX1UYgBirWlBc6fFYDJ4Dxt714wLRHpKp4JCUrEQXtYcYjoNnMo=";
 
@@ -36,7 +36,7 @@ public class AlipayConfig {
 	
 
 	// 调试用，创建TXT日志文件夹路径
-	public static String log_path = "D:\\";
+	public static String log_path = "C:\\";
 
 	// 字符编码格式 目前支持 gbk 或 utf-8
 	public static String input_charset = "utf-8";
