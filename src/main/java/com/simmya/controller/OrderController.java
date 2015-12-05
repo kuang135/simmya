@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -26,6 +28,8 @@ import com.simmya.vo.OrderV;
 @Controller
 public class OrderController {
 
+	private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
+	
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -39,17 +43,23 @@ public class OrderController {
 			@RequestHeader(value = "token",required = true)String token,
 			@RequestParam(value = "status",required = false)String status,
 			HttpServletRequest request) throws SQLException {
-		if (StringUtils.isBlank(token)) {
-			return null;
+		try {
+			if (StringUtils.isBlank(token)) {
+				return null;
+			}
+			LOG.info(" ---- token: " + token + " -- stauts: " + status + " ----  ");
+			User loginUser = userService.checkLogin(token);
+			if (loginUser == null) {
+				return null;
+			}
+			StringBuffer requestURL = request.getRequestURL();
+			String servletPath = request.getServletPath();
+			String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+			return orderService.listOrders(loginUser.getId(), url, status);
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
 		}
-		User loginUser = userService.checkLogin(token);
-		if (loginUser == null) {
-			return null;
-		}
-		StringBuffer requestURL = request.getRequestURL();
-		String servletPath = request.getServletPath();
-		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
-		return orderService.listOrders(loginUser.getId(), url, status);
+		return Collections.emptyList();
 	}
 	
 	@RequestMapping(value= "/orderBox/receive", method = RequestMethod.POST)
