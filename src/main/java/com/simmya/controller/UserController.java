@@ -179,6 +179,36 @@ public class UserController {
 		return userService.updatePassword(loginUser);
 	}
 	
+	@RequestMapping(value= "/user/setpassword", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> setPassword(@RequestParam(value = "phone",required = true)String phone,
+			@RequestParam(value = "password", required = true)String password,@RequestParam(value = "code", required = true)String code) throws SQLException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//验证短信码是否正确:
+		//1.通过手机号来验证短信码
+		Map<String, Object> codec = codecService.vailCode(phone);
+		map.put("code", "error");
+		map.put("desc", "");
+		if(!code.equals(codec.get("veriCode"))){
+			map.put("desc", "验证码出错");
+			return map;
+		}
+		if(((Date)codec.get("expiredTime")).compareTo(new Date())<0){
+			map.put("desc", "验证码过期");
+			return map;
+		}
+		User where = new User();
+		where.setUsername(phone);
+		where=userService.selectOneByWhere(where);
+		
+		String md5DigestAsHex = DigestUtils.md5DigestAsHex(password.getBytes());
+		where.setPassword(md5DigestAsHex);
+		userService.updatePassword(where);
+		map.put("code", "success");
+		map.put("desc", "重置密码成功。");
+		return map;
+	}
+	
 	/*
 	 * gender=男&birth=19800909&zodiac=虎&profession=计算机应用
 	 */
