@@ -21,7 +21,6 @@ public class Orders {
 
     private String addressId;
     
-    private BigDecimal balancePrice;
 
     public String getId() {
         return id;
@@ -71,11 +70,5 @@ public class Orders {
         this.addressId = addressId == null ? null : addressId.trim();
     }
 
-	public BigDecimal getBalancePrice() {
-		return balancePrice;
-	}
 
-	public void setBalancePrice(BigDecimal balancePrice) {
-		this.balancePrice = balancePrice;
-	}
 }

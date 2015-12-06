@@ -1,5 +1,6 @@
 package com.simmya.pojo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,8 @@ public class OrderBoxRef {
 	private String sendStatus;
 	private Integer sendCount;
 	private Date updateTime;
+	private BigDecimal balancePrice;
+
 	
 	public String getSendStatus() {
 		return sendStatus;
@@ -72,6 +75,13 @@ public class OrderBoxRef {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+	public BigDecimal getBalancePrice() {
+		return balancePrice;
+	}
+	public void setBalancePrice(BigDecimal balancePrice) {
+		this.balancePrice = balancePrice;
+	}
+
 	
 	
 }

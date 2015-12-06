@@ -5,6 +5,7 @@ public class BoxCommit {
 	private String boxid;
 	private String orderWay;
 	private int orderCount;
+	private double payBalance;
 	
 	public String getBoxid() {
 		return boxid;
@@ -23,6 +24,12 @@ public class BoxCommit {
 	}
 	public void setOrderCount(int orderCount) {
 		this.orderCount = orderCount;
+	}
+	public double getPayBalance() {
+		return payBalance;
+	}
+	public void setPayBalance(double payBalance) {
+		this.payBalance = payBalance;
 	}
 	
 	
