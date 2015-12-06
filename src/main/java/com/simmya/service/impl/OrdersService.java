@@ -120,31 +120,50 @@ public class OrdersService extends BaseService<Orders>{
 	 * 1.确定订单的状态为已付款
 	 * 2.将改订单的某个盒子的状态设置为退订
 	 * 3.back_box表中插入数据
-	 * 
+	 * 4.如果某个orderid下所有的box为已退订，就修改order 的状态为退订
 	 */
 	public Map<String, Object> orderBoxBack(String userId, String orderId, String boxId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "error");
 		Orders order = super.selectByPrimaryKey(orderId);
-		if (order != null && order.getStatus().equals(OrderStatus.Payed)) {
-			OrderBoxRef orderBoxRef = new OrderBoxRef();
-			orderBoxRef.setOrderId(orderId);
-			orderBoxRef.setBoxId(boxId);
-			List<OrderBoxRef> list = orderBoxRefMapper.select(orderBoxRef);
-			if (list != null && list.size() > 0) {
-				OrderBoxRef bean = list.get(0);
-				bean.setStatus(BoxStatus.Back);
-				orderBoxRefMapper.updateByPrimaryKeySelective(bean);
-				BackBox backBox = new BackBox();
-				backBox.setBoxId(boxId);
-				backBox.setOrderId(orderId);
-				backBox.setUserId(userId);
-				backBox.setCreateTime(new Date());
-				backBoxMapper.insert(backBox);
-				map.put("code", "success");
-				return map;
+		if (order == null || !order.getStatus().equals(OrderStatus.NotPayed))
+			return map;
+		OrderBoxRef orderBoxRef = new OrderBoxRef();
+		orderBoxRef.setOrderId(orderId);
+		orderBoxRef.setBoxId(boxId);
+		List<OrderBoxRef> list = orderBoxRefMapper.select(orderBoxRef);
+		if (list != null && list.size() > 0) {
+			OrderBoxRef bean = list.get(0);
+			bean.setStatus(BoxStatus.Back);
+			orderBoxRefMapper.updateByPrimaryKeySelective(bean);
+			BackBox backBox = new BackBox();
+			backBox.setBoxId(boxId);
+			backBox.setOrderId(orderId);
+			backBox.setUserId(userId);
+			backBox.setCreateTime(new Date());
+			backBoxMapper.insert(backBox);
+		}
+		OrderBoxRef orderBoxRef2 = new OrderBoxRef();
+		orderBoxRef2.setOrderId(orderId);
+		List<OrderBoxRef> lists = orderBoxRefMapper.select(orderBoxRef2);
+		boolean flag = true;
+		if (lists != null && lists.size() > 0) {
+			for (OrderBoxRef obf : lists) {
+				if (!boxId.equals(obf.getBoxId())) {
+					String status = obf.getStatus();
+					if (!status.equals(BoxStatus.Back)) {
+						flag = false;
+						break;
+					}
+				}
 			}
 		}
+		if (flag) {
+			Orders ods = super.selectByPrimaryKey(orderId);
+			ods.setStatus(OrderStatus.Back);
+			super.updateSelective(ods);
+		}
+		map.put("code", "success");
 		return map;
 	}
 
@@ -262,6 +281,7 @@ public class OrdersService extends BaseService<Orders>{
 	/*
 	 *  order_box_ref 表更改
 	 *  	count +1, sendStauts 修改， updatetime 修改
+	 *  	box 已完成，order 已完成
 	 *   orders-send 表添加记录
 	 */
 	@Transactional
@@ -280,10 +300,16 @@ public class OrdersService extends BaseService<Orders>{
 			if (orderCount == null) {
 				orderCount = 0;
 			}
+			if (BoxStatus.Back.equals(selectOne.getStatus())) {
+				return new AjaxResult(400, "该盒子已经退订，不能发送。");
+			}
 			if (sendCount >= orderCount) {
 				return new AjaxResult(400, "该盒子已经全部发送完，不能再发送。");
 			}
 			selectOne.setSendCount(sendCount + 1);
+			if ((sendCount + 1) == selectOne.getOrderCount()) {
+				selectOne.setStatus(BoxStatus.Completed);
+			}
 			selectOne.setSendStatus(SendStatus.Sended);
 			selectOne.setUpdateTime(new Date());
 			orderBoxRefMapper.updateByPrimaryKeySelective(selectOne);
@@ -298,6 +324,29 @@ public class OrdersService extends BaseService<Orders>{
 			orderSend.setCount(sendCount + 1);
 			orderSend.setDiscuss("");
 			orderSendMapper.insertSelective(orderSend);
+		}
+		/*	修改order 的status
+		 * 		所有box的status为已完成，order的status就为已完成
+		 * 		所有box的status为已退订，order的status就为已退订
+		 * 		box的status为已完成，或已退订，order的status就为已完成
+		 */
+		OrderBoxRef orderBoxRef2 = new OrderBoxRef();
+		orderBoxRef2.setOrderId(orderid);
+		List<OrderBoxRef> lists = orderBoxRefMapper.select(orderBoxRef2);
+		boolean flag = true;
+		if (lists != null && lists.size() > 0) {
+			for (OrderBoxRef obf : lists) {
+				String status = obf.getStatus();
+				if (status.equals(BoxStatus.NotCompleted)) {
+					flag = false;
+					break;
+				}
+			}
+		}
+		if (flag) {
+			Orders ods = super.selectByPrimaryKey(orderid);
+			ods.setStatus(OrderStatus.Completed);
+			super.updateSelective(ods);
 		}
 		return new AjaxResult(200, "发送操作成功。");
 	}
