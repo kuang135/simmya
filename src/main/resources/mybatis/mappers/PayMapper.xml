@@ -7,8 +7,8 @@
 		<selectKey keyProperty="id" resultType="String" order="BEFORE">
         	select  replace(uuid(),'-','')   from dual  
     	</selectKey>  
-			insert into ORDERS (ID,USER_ID, STATUS, TOTAL_PRICE, CREATE_TIME,ADDRESS_ID,BALANCE_PRICE)
-		    values (#{id},#{userId}, #{status},#{totalPrice}, #{createTime}, #{addressId}, #{balancePrice})
+			insert into ORDERS (ID,USER_ID, STATUS, TOTAL_PRICE, CREATE_TIME,ADDRESS_ID)
+		    values (#{id},#{userId}, #{status},#{totalPrice}, #{createTime}, #{addressId})
 	</insert>
   
   	<resultMap type="com.simmya.vo.OrderV" id="one2many" autoMapping="true"> 
