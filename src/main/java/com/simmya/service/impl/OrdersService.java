@@ -286,6 +286,16 @@ public class OrdersService extends BaseService<Orders>{
 	 */
 	@Transactional
 	public AjaxResult sendBox(String orderid, String boxid) {
+		Orders od = super.selectByPrimaryKey(orderid);
+		if (OrderStatus.NotPayed.equals(od.getStatus())) {
+			return new AjaxResult(400, "该订单还未付款，不能发送");
+		}
+		if (OrderStatus.Back.equals(od.getStatus())) {
+			return new AjaxResult(400, "该订单已退订，不能发送");
+		}
+		if (OrderStatus.Completed.equals(od.getStatus())) {
+			return new AjaxResult(400, "该订单已完成，不能发送");
+		}
 		OrderBoxRef orderBoxRef = new OrderBoxRef();
 		orderBoxRef.setOrderId(orderid);
 		orderBoxRef.setBoxId(boxid);
