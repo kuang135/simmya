@@ -295,7 +295,7 @@ public class InfoService extends BaseService<Info>{
 		return count;
 	}
 
-	public Map<String, Object> deleteInfo(String id, String infoid) {
+	public Map<String, Object> deleteAgree(String id, String infoid) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			InfoAgree ia = new InfoAgree();
@@ -303,6 +303,9 @@ public class InfoService extends BaseService<Info>{
 			ia.setInfoId(infoid);
 			int c = infoAgreeMapper.delete(ia);
 			if (c > 0) {
+				Info info = super.selectByPrimaryKey(infoid);
+				info.setAgreeCount(info.getAgreeCount() - 1);
+				super.updateSelective(info);
 				map.put("code", "success");
 			} else {
 				map.put("code", "error");

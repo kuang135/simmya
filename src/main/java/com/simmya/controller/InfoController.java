@@ -124,7 +124,7 @@ public class InfoController {
 	
 	@RequestMapping(value= "/infos/delAgree", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> deleteBoxCollect(
+	public Map<String, Object> deleteInfoAgree(
 			@RequestHeader(value = "token",required = true)String token,
 			@RequestParam(value = "infoid",required = true)String infoid) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -137,7 +137,7 @@ public class InfoController {
 			map.put("code", "error");
 			return map;
 		}
-		return infoService.deleteInfo(loginUser.getId(), infoid);
+		return infoService.deleteAgree(loginUser.getId(), infoid);
 	}
 	
 }

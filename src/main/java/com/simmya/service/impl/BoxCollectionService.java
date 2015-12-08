@@ -6,8 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simmya.mapper.BoxMapper;
+import com.simmya.pojo.Box;
 import com.simmya.pojo.BoxCollection;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
@@ -15,6 +18,9 @@ import com.simmya.util.DbUtil;
 @Service
 public class BoxCollectionService extends BaseService<BoxCollection>{
 	
+	
+	@Autowired
+	private BoxMapper boxMapper;
 	
 	/*
 	 * [{'id':'2354234srte',NAME':'烧麦盒子','TITLE':'烧麦好吃',
@@ -41,6 +47,9 @@ public class BoxCollectionService extends BaseService<BoxCollection>{
 			bc.setBoxId(boxid);
 			int c = super.deleteByWhere(bc);
 			if (c > 0) {
+				Box box = boxMapper.selectByPrimaryKey(boxid);
+				box.setCollectCount(box.getCollectCount() -1);
+				boxMapper.updateByPrimaryKeySelective(box);
 				map.put("code", "success");
 			} else {
 				map.put("code", "error");

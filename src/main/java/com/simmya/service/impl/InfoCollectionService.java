@@ -6,8 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.simmya.mapper.InfoMapper;
+import com.simmya.pojo.Info;
 import com.simmya.pojo.InfoCollection;
 import com.simmya.service.BaseService;
 import com.simmya.util.DbUtil;
@@ -15,6 +19,9 @@ import com.simmya.util.DbUtil;
 @Service
 public class InfoCollectionService extends BaseService<InfoCollection>{
 	
+	
+	@Autowired
+	private InfoMapper infoMapper;
 	
 	/*
 	 * [{'id':'2354234srte',NAME':'烧麦','TITLE':'烧麦好吃',
@@ -37,6 +44,7 @@ public class InfoCollectionService extends BaseService<InfoCollection>{
 		return DbUtil.getMapList(sql, id);
 	}
 
+	@Transactional
 	public Map<String, Object> deleteCollect(String id, String infoid) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -45,6 +53,9 @@ public class InfoCollectionService extends BaseService<InfoCollection>{
 			ic.setInfoId(infoid);
 			int c = super.deleteByWhere(ic);
 			if (c > 0) {
+				Info info = infoMapper.selectByPrimaryKey(infoid);
+				info.setCollectCount(info.getCollectCount() -1);
+				infoMapper.updateByPrimaryKeySelective(info);
 				map.put("code", "success");
 			} else {
 				map.put("code", "error");
