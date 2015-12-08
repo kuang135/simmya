@@ -2,6 +2,7 @@ package com.simmya.controller;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.simmya.pojo.User;
@@ -66,5 +68,41 @@ public class CollectController {
 		return boxCollectService.list(loginUser.getId(), url);
 	}
 	
+	
+	@RequestMapping(value= "/infos/delCollect", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteInfoCollect(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "infoid",required = true)String infoid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		return infoCollectService.deleteCollect(loginUser.getId(), infoid);
+	}
+	
+	@RequestMapping(value= "/box/delCollect", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteBoxCollect(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "boxid",required = true)String boxid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		return boxCollectService.deleteCollect(loginUser.getId(), boxid);
+	}
 	
 }

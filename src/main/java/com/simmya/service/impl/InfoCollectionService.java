@@ -2,6 +2,7 @@ package com.simmya.service.impl;
 
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,25 @@ public class InfoCollectionService extends BaseService<InfoCollection>{
 				+ " LEFT JOIN info b ON a.INFO_ID = b.ID "
 				+ " WHERE a.USER_ID = ?";
 		return DbUtil.getMapList(sql, id);
+	}
+
+	public Map<String, Object> deleteCollect(String id, String infoid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			InfoCollection ic = new InfoCollection();
+			ic.setUserId(id);
+			ic.setInfoId(infoid);
+			int c = super.deleteByWhere(ic);
+			if (c > 0) {
+				map.put("code", "success");
+			} else {
+				map.put("code", "error");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("code", "error");
+		}
+		return map;
 	}
 	
 	

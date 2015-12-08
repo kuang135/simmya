@@ -294,5 +294,24 @@ public class InfoService extends BaseService<Info>{
 		}
 		return count;
 	}
+
+	public Map<String, Object> deleteInfo(String id, String infoid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			InfoAgree ia = new InfoAgree();
+			ia.setUserId(id);
+			ia.setInfoId(infoid);
+			int c = infoAgreeMapper.delete(ia);
+			if (c > 0) {
+				map.put("code", "success");
+			} else {
+				map.put("code", "error");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("code", "error");
+		}
+		return map;
+	}
 	
 }

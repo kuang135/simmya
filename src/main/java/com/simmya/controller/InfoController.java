@@ -2,6 +2,7 @@ package com.simmya.controller;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,4 +121,23 @@ public class InfoController {
 		}
 		return infoService.shareInfo(loginUser.getId(), infoid);
 	}
+	
+	@RequestMapping(value= "/infos/delAgree", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteBoxCollect(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "infoid",required = true)String infoid) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		return infoService.deleteInfo(loginUser.getId(), infoid);
+	}
+	
 }
