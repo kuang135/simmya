@@ -36,6 +36,7 @@ public class PayService extends BaseService<OrderBoxRef> {
 		order_.setAddressId(order.getAddressId());
 		order_.setCreateTime(new Date());
 		order_.setTotalPrice(new BigDecimal(order.getTotalPay()));
+		order_.setBalancePrice(new BigDecimal(order.getPayBalance()));
 		payMapper.insertOrders(order_);
 		
 		System.out.println(order_.getId());
@@ -46,8 +47,7 @@ public class PayService extends BaseService<OrderBoxRef> {
 			boxRef.setOrderId(order_.getId());
 			boxRef.setOrderWay(box.getOrderWay());
 			boxRef.setStatus(BoxStatus.NotCompleted);
-			boxRef.setSendStatus(SendStatus.NoSended);
-			boxRef.setBalancePrice(new BigDecimal(box.getPayBalance()));
+			boxRef.setSendStatus(OrderStatus.NotPayed);
 			super.save(boxRef);
 			cartsService.deleteCarts(loginUser.getId(), boxRef.getBoxId());
 		}

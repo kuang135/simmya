@@ -25,6 +25,9 @@ import com.simmya.alipay.sign.RSA;
 import com.simmya.alipay.util.AlipayCore;
 import com.simmya.alipay.util.AlipayNotify;
 import com.simmya.constant.OrderStatus;
+import com.simmya.constant.SendStatus;
+import com.simmya.mapper.OrderBoxRefMapper;
+import com.simmya.pojo.OrderBoxRef;
 import com.simmya.pojo.Orders;
 import com.simmya.pojo.OrdersCommit;
 import com.simmya.pojo.User;
@@ -44,6 +47,8 @@ public class PayController {
 	private PayService payService;
 	@Autowired
 	private OrdersService ordersService;
+	@Autowired
+	private OrderBoxRefMapper orderBoxRefMapper;
 	
 	/*
 	 * 提交订单
@@ -147,6 +152,18 @@ public class PayController {
 				System.out.println("数据操作");
 				order.setStatus(OrderStatus.Payed);
 				ordersService.update(order);
+				
+				
+				OrderBoxRef orderBoxRef = new OrderBoxRef();
+				orderBoxRef.setOrderId(out_trade_no);
+				List<OrderBoxRef> list = orderBoxRefMapper.select(orderBoxRef);
+				for(OrderBoxRef boxRef:list){
+				
+					boxRef.setSendStatus(SendStatus.NoSended);
+					//bean.setStatus(BoxStatus.NotCompleted);
+					orderBoxRefMapper.updateByPrimaryKeySelective(boxRef);
+					
+				}
 				returnString = "success";
 			}
 		}

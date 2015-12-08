@@ -11,8 +11,17 @@ public class OrdersCommit {
 	private Date createTime;
 	private String addressId;
 	private double totalPay;
+	private double payBalance;
 	private List<BoxCommit>  boxs;
 	
+	
+	
+	public double getPayBalance() {
+		return payBalance;
+	}
+	public void setPayBalance(double payBalance) {
+		this.payBalance = payBalance;
+	}
 	public Date getCreateTime() {
 		return createTime;
 	}
