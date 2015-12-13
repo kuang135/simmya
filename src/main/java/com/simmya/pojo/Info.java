@@ -15,19 +15,19 @@ public class Info {
 
     private String detail;
 
-    private Integer collectCount;
+    private int collectCount;
 
-    private Integer shareCount;
+    private int shareCount;
 
-    private Integer agreeCount;
+    private int agreeCount;
 
     private String imageAddress;
 
     private String source;
 
-    private Integer clickCount;
+    private int clickCount;
 
-    private Integer discussCount;
+    private int discussCount;
     
     @Transient
     private boolean selected;
@@ -73,27 +73,27 @@ public class Info {
         this.detail = detail == null ? null : detail.trim();
     }
 
-    public Integer getCollectCount() {
+    public int getCollectCount() {
         return collectCount;
     }
 
-    public void setCollectCount(Integer collectCount) {
+    public void setCollectCount(int collectCount) {
         this.collectCount = collectCount;
     }
 
-    public Integer getShareCount() {
+    public int getShareCount() {
         return shareCount;
     }
 
-    public void setShareCount(Integer shareCount) {
+    public void setShareCount(int shareCount) {
         this.shareCount = shareCount;
     }
 
-    public Integer getAgreeCount() {
+    public int getAgreeCount() {
         return agreeCount;
     }
 
-    public void setAgreeCount(Integer agreeCount) {
+    public void setAgreeCount(int agreeCount) {
         this.agreeCount = agreeCount;
     }
 
@@ -113,19 +113,19 @@ public class Info {
         this.source = source == null ? null : source.trim();
     }
 
-    public Integer getClickCount() {
+    public int getClickCount() {
         return clickCount;
     }
 
-    public void setClickCount(Integer clickCount) {
+    public void setClickCount(int clickCount) {
         this.clickCount = clickCount;
     }
 
-    public Integer getDiscussCount() {
+    public int getDiscussCount() {
         return discussCount;
     }
 
-    public void setDiscussCount(Integer discussCount) {
+    public void setDiscussCount(int discussCount) {
         this.discussCount = discussCount;
     }
 }

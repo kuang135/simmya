@@ -99,9 +99,13 @@ public class InfoService extends BaseService<Info>{
 	
 
 	public Map<String, Object> getDetailById(String infoid, String url) throws SQLException {
-		Info info = new Info();
-		info.setClickCount(info.getClickCount() + 1);
+		Info info = super.selectByPrimaryKey(infoid);
+		System.out.println(infoid);
+		System.out.println(info.getId());
+		System.out.println(info.getClickCount());
+		System.out.println(info.getName());
 		info.setId(infoid);
+		info.setClickCount(info.getClickCount() + 1);
 		super.updateSelective(info);
 		String sql = "SELECT ID id,NAME NAME,TITLE TITLE,DETAIL detail,"
 				+ " CASE WHEN COLLECT_COUNT IS NULL THEN 0 ELSE COLLECT_COUNT END collectCount,"
