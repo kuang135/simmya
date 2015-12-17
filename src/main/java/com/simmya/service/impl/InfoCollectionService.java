@@ -54,7 +54,8 @@ public class InfoCollectionService extends BaseService<InfoCollection>{
 			int c = super.deleteByWhere(ic);
 			if (c > 0) {
 				Info info = infoMapper.selectByPrimaryKey(infoid);
-				info.setCollectCount(info.getCollectCount() -1);
+				int collectCount = info.getCollectCount();
+				info.setCollectCount(collectCount -1);
 				infoMapper.updateByPrimaryKeySelective(info);
 				map.put("code", "success");
 			} else {
