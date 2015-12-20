@@ -1,6 +1,7 @@
 package com.simmya.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +48,10 @@ public class InfoController {
 		} else {
 			User loginUser = userService.checkLogin(token);
 			if (loginUser == null) {
-				return Collections.emptyList();
+				List<Map<String, Object>> listss=new ArrayList<Map<String, Object>>();
+				listss.add(ReturnMap.FAULT);
+				return listss;
+				//return Collections.emptyList();
 			}
 			return infoService.getInfoListByToken(loginUser.getId(), start, size, url);
 		}
