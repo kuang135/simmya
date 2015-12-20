@@ -20,11 +20,11 @@ public class Box {
 
     private BigDecimal boxPrice;
 
-    private Integer collectCount;
+    private int collectCount;
 
-    private Integer shareCount;
+    private int shareCount;
     
-    private Integer discussCount;
+    private int discussCount;
 
     public String getId() {
         return id;
@@ -74,27 +74,27 @@ public class Box {
         this.boxPrice = boxPrice;
     }
 
-    public Integer getCollectCount() {
+    public int getCollectCount() {
         return collectCount;
     }
 
-    public void setCollectCount(Integer collectCount) {
+    public void setCollectCount(int collectCount) {
         this.collectCount = collectCount;
     }
 
-    public Integer getShareCount() {
+    public int getShareCount() {
         return shareCount;
     }
 
-    public void setShareCount(Integer shareCount) {
+    public void setShareCount(int shareCount) {
         this.shareCount = shareCount;
     }
 
-	public Integer getDiscussCount() {
+	public int getDiscussCount() {
 		return discussCount;
 	}
 
-	public void setDiscussCount(Integer discussCount) {
+	public void setDiscussCount(int discussCount) {
 		this.discussCount = discussCount;
 	}
 }
