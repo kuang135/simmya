@@ -35,8 +35,8 @@ public class PayService extends BaseService<OrderBoxRef> {
 		order_.setStatus(OrderStatus.NotPayed);
 		order_.setAddressId(order.getAddressId());
 		order_.setCreateTime(new Date());
-		order_.setTotalPrice(new BigDecimal(order.getTotalPay()));
-		order_.setBalancePrice(new BigDecimal(order.getPayBalance()));
+		order_.setTotalPrice(new BigDecimal(String.valueOf(order.getTotalPay())));
+		order_.setBalancePrice(new BigDecimal(String.valueOf(order.getPayBalance())));
 		payMapper.insertOrders(order_);
 		
 		System.out.println(order_.getId());
