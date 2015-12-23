@@ -34,6 +34,8 @@ public class User {
     private Date expiredTime;
 
     private String headPic;
+    
+    private Integer stage;
 
     public String getId() {
         return id;
@@ -138,4 +140,14 @@ public class User {
     public void setHeadPic(String headPic) {
         this.headPic = headPic == null ? null : headPic.trim();
     }
+
+	public Integer getStage() {
+		return stage;
+	}
+
+	public void setStage(Integer stage) {
+		this.stage = stage;
+	}
+
+
 }

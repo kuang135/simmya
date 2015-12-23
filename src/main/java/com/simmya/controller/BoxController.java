@@ -1,6 +1,7 @@
 package com.simmya.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.simmya.constant.ReturnMap;
+import com.simmya.mapper.BoxCollectionMapper;
+import com.simmya.pojo.BoxCollection;
 import com.simmya.pojo.User;
 import com.simmya.service.impl.BoxService;
 import com.simmya.service.impl.UserService;
@@ -29,6 +32,8 @@ public class BoxController {
 	private BoxService boxService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private BoxCollectionMapper boxCollectionMapper;
 	/*
 	 * start=1&limit=10
 	 * {'id':'2354234srte',NAME':'烧麦盒子','TITLE':'烧麦好吃',
@@ -75,6 +80,44 @@ public class BoxController {
 		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
 		return boxService.detail(boxid, url);
 	}
+	
+	@RequestMapping(value= "/boxs/idx", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Map<String, Object>> detailxx(@RequestParam(value = "boxid", required = true)String boxid,@RequestHeader(value = "token",required = true)String token,
+			HttpServletRequest request) throws SQLException {
+		List<Map<String, Object>> mapList=new ArrayList<Map<String, Object>>();
+		if (StringUtils.isBlank(token)) {
+			mapList.add(ReturnMap.BLANK);
+			return mapList;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			mapList.add(ReturnMap.FAULT);
+			return mapList;
+		}
+		
+		
+		StringBuffer requestURL = request.getRequestURL();
+		String servletPath = request.getServletPath();
+		String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+		mapList=boxService.detail(boxid, url);
+		if (mapList != null && mapList.size() > 0) {
+			for (Map<String, Object> map : mapList) {
+				BoxCollection bc = new BoxCollection();
+				bc.setBoxId((String)map.get("id"));
+				bc.setUserId(loginUser.getId());
+				BoxCollection selectOne = boxCollectionMapper.selectOne(bc);
+				if (selectOne == null) {
+					map.put("collected", false);
+				} else {
+					map.put("collected", true);
+				}
+			}
+		}
+		return mapList;
+	}
+	
+	
 	
 	@RequestMapping(value= "/boxs/collect", method = RequestMethod.POST)
 	@ResponseBody

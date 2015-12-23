@@ -209,6 +209,41 @@ public class UserController {
 		return map;
 	}
 	
+	@RequestMapping(value= "/user/stage", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> setStage(@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "stage", required = true)Integer stage) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		loginUser.setStage(stage);
+		return userService.completeInfo(loginUser);
+	}
+	
+	@RequestMapping(value= "/user/stage", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getStage(@RequestHeader(value = "token",required = true)String token) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if (StringUtils.isBlank(token)) {
+			map.put("code", "error");
+			return map;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			map.put("code", "error");
+			return map;
+		}
+		map.put("stage",loginUser.getStage());
+		return map;
+	}
+	
 	/*
 	 * gender=男&birth=19800909&zodiac=虎&profession=计算机应用
 	 */
