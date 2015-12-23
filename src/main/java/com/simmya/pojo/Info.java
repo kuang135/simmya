@@ -15,19 +15,19 @@ public class Info {
 
     private String detail;
 
-    private int collectCount;
+    private Integer collectCount;
 
-    private int shareCount;
+    private Integer shareCount;
 
-    private int agreeCount;
+    private Integer agreeCount;
 
     private String imageAddress;
 
     private String source;
 
-    private int clickCount;
+    private Integer clickCount;
 
-    private int discussCount;
+    private Integer discussCount;
     
     @Transient
     private boolean selected;
@@ -73,27 +73,27 @@ public class Info {
         this.detail = detail == null ? null : detail.trim();
     }
 
-    public int getCollectCount() {
-        return collectCount;
+    public Integer getCollectCount() {
+        return collectCount==null?0:collectCount;
     }
 
-    public void setCollectCount(int collectCount) {
+    public void setCollectCount(Integer collectCount) {
         this.collectCount = collectCount;
     }
 
-    public int getShareCount() {
-        return shareCount;
+    public Integer getShareCount() {
+        return shareCount==null?0:shareCount;
     }
 
-    public void setShareCount(int shareCount) {
+    public void setShareCount(Integer shareCount) {
         this.shareCount = shareCount;
     }
 
-    public int getAgreeCount() {
-        return agreeCount;
+    public Integer getAgreeCount() {
+        return agreeCount==null?0:agreeCount;
     }
 
-    public void setAgreeCount(int agreeCount) {
+    public void setAgreeCount(Integer agreeCount) {
         this.agreeCount = agreeCount;
     }
 
@@ -113,19 +113,19 @@ public class Info {
         this.source = source == null ? null : source.trim();
     }
 
-    public int getClickCount() {
-        return clickCount;
+    public Integer getClickCount() {
+        return clickCount==null?0:clickCount;
     }
 
-    public void setClickCount(int clickCount) {
+    public void setClickCount(Integer clickCount) {
         this.clickCount = clickCount;
     }
 
-    public int getDiscussCount() {
-        return discussCount;
+    public Integer getDiscussCount() {
+        return discussCount==null?0:discussCount;
     }
 
-    public void setDiscussCount(int discussCount) {
+    public void setDiscussCount(Integer discussCount) {
         this.discussCount = discussCount;
     }
 }
