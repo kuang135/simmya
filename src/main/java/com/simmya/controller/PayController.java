@@ -162,7 +162,7 @@ public class PayController {
 					boxRef.setSendStatus(SendStatus.NoSended);
 					//bean.setStatus(BoxStatus.NotCompleted);
 					orderBoxRefMapper.updateByPrimaryKeySelective(boxRef);
-					
+					System.out.println("结束操作");
 				}
 				returnString = "success";
 			}
@@ -170,6 +170,46 @@ public class PayController {
 		System.out.println("结束验证");
 		return returnString;
 	}
+	
+
+	@RequestMapping(value= "/boxs/backWX", method = RequestMethod.POST)
+	@ResponseBody
+	public String backWX(@RequestHeader(value = "token",required = true)String token,@RequestParam(value = "orderid",required = true)String orderid){
+		System.out.println("进入微信回调");
+		String returnString="error";
+		if (StringUtils.isBlank(token)) {
+			return returnString;
+		}
+		User loginUser = userService.checkLogin(token);
+		if (loginUser == null) {
+			return returnString;
+		}
+		
+		
+		Orders order=ordersService.selectByPrimaryKey(orderid);
+		if(order!=null){
+			System.out.println("微信数据操作");
+			order.setStatus(OrderStatus.Payed);
+			ordersService.update(order);
+			
+			
+			OrderBoxRef orderBoxRef = new OrderBoxRef();
+			orderBoxRef.setOrderId(orderid);
+			List<OrderBoxRef> list = orderBoxRefMapper.select(orderBoxRef);
+			for(OrderBoxRef boxRef:list){
+			
+				boxRef.setSendStatus(SendStatus.NoSended);
+				//bean.setStatus(BoxStatus.NotCompleted);
+				orderBoxRefMapper.updateByPrimaryKeySelective(boxRef);
+				System.out.println("微信结束操作");
+			}
+			returnString = "success";
+		}
+		
+		
+		return returnString;
+	}
+	
 	
 	@RequestMapping(value= "/user/ordersNoPay", method = RequestMethod.GET)
 	@ResponseBody
