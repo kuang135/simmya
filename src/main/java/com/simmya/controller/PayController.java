@@ -3,6 +3,7 @@ package com.simmya.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -222,6 +223,27 @@ public class PayController {
 			return null;
 		}
 		return payService.getOrderListNoPay(loginUser);
+	}
+	
+	
+	public void delOrderWithNoPay(){
+		Orders order=new Orders();
+		order.setStatus("未付款");	
+		List<Orders> orders=ordersService.selectListByWhere(order);
+		Calendar cal = Calendar.getInstance ();
+        cal.set(Calendar.MINUTE,Calendar.MINUTE-30) ; //把时间设置为当前时间-30分钟
+        int i=0;
+		for(Orders order_:orders){
+			if(order_.getCreateTime().before(cal.getTime())){
+				ordersService.deleteById(order_.getId());
+				OrderBoxRef ref=new OrderBoxRef();
+				ref.setOrderId(order_.getId());
+				orderBoxRefMapper.delete(ref);
+				i++;
+			}
+		}
+		
+		System.out.println("delete:"+i);
 	}
 	
 	
