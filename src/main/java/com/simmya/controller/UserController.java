@@ -1,6 +1,7 @@
 package com.simmya.controller;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -224,6 +225,7 @@ public class UserController {
 			return map;
 		}
 		loginUser.setStage(stage);
+		loginUser.setBalance(new BigDecimal(String.valueOf(loginUser.getBalance())).add(new BigDecimal("300")));
 		return userService.completeInfo(loginUser);
 	}
 	
