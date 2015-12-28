@@ -61,6 +61,34 @@ public class OrderController {
 		return Collections.emptyList();
 	}
 	
+	@RequestMapping(value= "/user/order", method = RequestMethod.GET)
+	@ResponseBody
+	public OrderV getOrder(
+			@RequestHeader(value = "token",required = true)String token,
+			@RequestParam(value = "orderid",required = true)String orderid,
+			HttpServletRequest request) throws SQLException {
+		try {
+			if (StringUtils.isBlank(token)) {
+				return null;
+			}
+			User loginUser = userService.checkLogin(token);
+			if (loginUser == null) {
+				return null;
+			}
+			StringBuffer requestURL = request.getRequestURL();
+			String servletPath = request.getServletPath();
+			String url = StringUtils.substringBefore(requestURL.toString(), servletPath) + "/";
+			List<OrderV> orderVs=orderService.getOrder(loginUser.getId(), url, orderid);
+			if(orderVs==null || orderVs.size()==0){
+				return null;
+			}
+			return orderVs.get(0);
+		} catch (Exception e) {
+			LOG.error(e.getMessage(), e);
+		}
+		return null;
+	}
+	
 	@RequestMapping(value= "/orderBox/receive", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> receiveOrderBox(

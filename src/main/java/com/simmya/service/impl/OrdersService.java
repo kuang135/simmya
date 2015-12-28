@@ -62,6 +62,11 @@ public class OrdersService extends BaseService<Orders>{
 		return list;
 	}
 	
+	public List<OrderV> getOrder(String userid, String url, String orderid) throws SQLException {
+		List<OrderV> list = orderMapper.getOrderByid(userid, url, orderid);
+		return list;
+	}
+	
 
 
 	/*
